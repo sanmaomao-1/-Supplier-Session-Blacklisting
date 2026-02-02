@@ -20,6 +20,8 @@
             padding: 20px;
             color: #333;
         }
+
+        /* 顶部面包屑 */
         .breadcrumb {
             margin-bottom: 20px;
             font-size: 14px;
@@ -28,32 +30,34 @@
         .breadcrumb b {
             color: #333;
         }
+
+        /* 筛选与操作区 */
         .layout-container {
             background: #fff;
             padding: 20px;
             border-radius: 4px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
+
         .action-bar {
             display: flex;
             justify-content: space-between;
             margin-bottom: 16px;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
         }
+
         .search-group {
             display: flex;
             gap: 10px;
-            flex-wrap: wrap;
-            align-items: center;
+            flex-wrap: wrap; /* 防止宽度不够换行 */
         }
+
         .input-control {
             padding: 6px 12px;
             border: 1px solid #d9d9d9;
             border-radius: 4px;
             font-size: 14px;
-            width: 250px;
+            width: 250px; /* 稍微加宽以适应更多搜索内容 */
             transition: all 0.3s;
         }
         .input-control:focus {
@@ -61,6 +65,7 @@
             outline: none;
             box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
         }
+
         .btn {
             padding: 6px 16px;
             border: 1px solid #d9d9d9;
@@ -71,12 +76,14 @@
             transition: all 0.3s;
         }
         .btn:hover { color: var(--primary-color); border-color: var(--primary-color); }
+        
         .btn-primary {
             background: var(--primary-color);
             color: #fff;
             border: none;
         }
         .btn-primary:hover { background: #40a9ff; color: #fff; }
+
         .btn-danger {
             background: #fff;
             color: var(--danger-color);
@@ -86,11 +93,12 @@
             background: #fff1f0;
             border-color: var(--danger-color);
         }
+
+        /* 表格区 */
         table {
             width: 100%;
             border-collapse: collapse;
             font-size: 13px;
-            table-layout: fixed;
         }
         th {
             background: #fafafa;
@@ -105,11 +113,9 @@
             padding: 14px 16px;
             border-bottom: 1px solid var(--border-color);
             color: #333;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
         }
         tr:hover td { background: #fdfdfd; }
+        
         .reason-text {
             color: #666;
             max-width: 300px;
@@ -133,6 +139,8 @@
             border-radius: 2px;
             font-size: 12px;
         }
+        
+        /* 拦截数点击样式 */
         .intercept-count {
             font-weight: bold;
             color: #333;
@@ -144,6 +152,8 @@
             color: var(--primary-color);
             text-decoration-color: var(--primary-color);
         }
+
+        /* 新增类型标签样式 */
         .type-tag {
             display: inline-block;
             padding: 1px 6px;
@@ -152,17 +162,19 @@
             margin-right: 4px;
             border: 1px solid transparent;
         }
-        .type-sourcing { background: #e6f7ff; border-color: #91d5ff; color: #1890ff; }
-        .type-check { background: #f6ffed; border-color: #b7eb8f; color: #52c41a; }
-        .type-notify { background: #fff7e6; border-color: #ffd591; color: #fa8c16; }
-        .type-order { background: #fff1f0; border-color: #ffa39e; color: #cf1322; font-weight: bold; }
+        .type-sourcing { background: #e6f7ff; border-color: #91d5ff; color: #1890ff; } /* 找货 */
+        .type-check { background: #f6ffed; border-color: #b7eb8f; color: #52c41a; } /* 查单 */
+        .type-notify { background: #fff7e6; border-color: #ffd591; color: #fa8c16; } /* 通知 */
+        .type-order { background: #fff1f0; border-color: #ffa39e; color: #cf1322; font-weight: bold; } /* 禁止下单 - 严重 */
+
         .action-link {
             color: var(--primary-color);
             cursor: pointer;
             margin-right: 12px;
-            user-select: none;
         }
         .action-link.delete { color: var(--danger-color); }
+
+        /* Modal 弹窗 */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -178,7 +190,6 @@
             border-radius: 8px;
             box-shadow: 0 9px 28px rgba(0,0,0,0.05);
             animation: fadeIn 0.2s ease;
-            max-width: 90vw;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: scale(0.98); }
@@ -191,7 +202,6 @@
             font-size: 16px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
         }
         .modal-body { padding: 24px; }
         .modal-footer {
@@ -201,15 +211,17 @@
             background: #fbfbfb;
             border-radius: 0 0 8px 8px;
         }
+
         .form-item { margin-bottom: 20px; }
         .form-label { display: block; margin-bottom: 8px; font-weight: 500; }
         .form-input-full { width: 100%; box-sizing: border-box; }
         textarea.form-input-full { height: 80px; resize: vertical; }
+        
+        /* Checkbox group styles */
         .checkbox-group {
             display: flex;
             gap: 16px;
             margin-top: 6px;
-            flex-wrap: wrap;
         }
         .checkbox-label {
             display: flex;
@@ -221,13 +233,15 @@
         .checkbox-label input[type="checkbox"] {
             margin: 0;
         }
+
+        /* 搜索结果下拉模拟 */
         .search-results {
             border: 1px solid #d9d9d9;
             border-top: none;
             max-height: 150px;
             overflow-y: auto;
             position: absolute;
-            width: calc(100% - 2px);
+            width: 450px; /* 略小于modal宽 */
             background: #fff;
             z-index: 10;
             border-radius: 0 0 4px 4px;
@@ -240,6 +254,8 @@
             font-size: 13px;
         }
         .search-result-item:hover { background: #e6f7ff; }
+
+        /* 多选下拉样式 */
         .multi-select {
             position: relative;
             min-width: 120px;
@@ -284,52 +300,56 @@
         }
         .select-options label:hover { background: #f5f5f5; }
         .select-options input[type="checkbox"] { margin: 0; }
+
+        /* 空状态 */
         .empty-state {
             text-align: center;
             padding: 40px;
             color: #999;
         }
-        @media (max-width: 1200px) {
-            .input-control { width: 200px; }
-        }
-        @media (max-width: 992px) {
-            .input-control { width: 160px; }
-        }
     </style>
 </head>
 <body>
+
     <div class="breadcrumb">采购配置 / <b>供应商风控中心</b></div>
+
     <div class="layout-container">
+        <!-- 顶部操作栏 -->
         <div class="action-bar">
             <div class="search-group">
-                <select id="filterStatus" class="input-control" style="width: 110px;">
+                <select id="filterStatus" class="input-control" style="width: 110px;" onchange="renderTable()">
                     <option value="all" selected>状态: 全部</option>
                     <option value="active">已拉黑</option>
                     <option value="inactive">已恢复</option>
                 </select>
+                
+                <!-- Multi-select for Type -->
                 <div class="multi-select" id="typeMultiSelect">
-                    <div class="select-trigger" id="typeSelectTrigger">
+                    <div class="select-trigger" onclick="toggleTypeSelect(event)">
                         <span id="typeSelectLabel">类型: 全部</span>
                         <small>▼</small>
                     </div>
                     <div class="select-options" id="typeSelectOptions">
-                        <label><input type="checkbox" value="找货" checked class="type-checkbox"> 找货</label>
-                        <label><input type="checkbox" value="查单" checked class="type-checkbox"> 查单</label>
-                        <label><input type="checkbox" value="通知" checked class="type-checkbox"> 通知</label>
+                        <label><input type="checkbox" value="找货" checked onchange="updateTypeLabel(); renderTable()"> 找货</label>
+                        <label><input type="checkbox" value="查单" checked onchange="updateTypeLabel(); renderTable()"> 查单</label>
+                        <label><input type="checkbox" value="通知" checked onchange="updateTypeLabel(); renderTable()"> 通知</label>
                     </div>
                 </div>
+
                 <input type="text" class="input-control" placeholder="搜索旺旺号/公司名/ID" id="searchInput">
-                <button class="btn btn-primary" id="searchBtn">搜索</button>
-                <button class="btn" id="resetBtn">重置</button>
+                <button class="btn btn-primary" onclick="renderTable()">搜索</button>
+                <button class="btn" onclick="resetSearch()">重置</button>
             </div>
-            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 15px;">
                 <span style="font-size: 13px; color: #666;">
                     刷新时间: <span id="refreshTimeDisplay">--</span>
-                    <i style="cursor: pointer; margin-left: 4px;" id="refreshIcon" title="刷新列表">↻</i>
+                    <i style="cursor: pointer; margin-left: 4px;" onclick="refreshList()" title="刷新列表">↻</i>
                 </span>
-                <button class="btn btn-danger" id="addBlacklistBtn">+ 新增拉黑供应商</button>
+                <button class="btn btn-danger" onclick="addBlacklist()">+ 新增拉黑供应商</button>
             </div>
         </div>
+
+        <!-- 列表 -->
         <table>
             <thead>
                 <tr>
@@ -339,7 +359,7 @@
                     <th width="150">拉黑类型</th>
                     <th width="80">本月拦截</th>
                     <th>拉黑原因</th>
-                    <th width="160" id="sortTimeTh" title="点击切换按时间排序">
+                    <th width="160" style="cursor: pointer; user-select: none;" onclick="toggleSort()" title="点击切换按时间排序">
                         时间信息 <span id="sortTimeIcon">↓</span>
                     </th>
                     <th width="80">操作人</th>
@@ -347,39 +367,50 @@
                     <th width="100">操作</th>
                 </tr>
             </thead>
-            <tbody id="blacklistBody"><!-- JS渲染 --></tbody>
+            <tbody id="blacklistBody">
+                <!-- JS 渲染 -->
+            </tbody>
         </table>
-        <div id="emptyState" class="empty-state" style="display: none;">暂无拉黑数据</div>
+        
+        <div id="emptyState" class="empty-state" style="display: none;">
+            暂无拉黑数据
+        </div>
+
         <div style="margin-top: 20px; text-align: center; color: #999; font-size: 13px;">
             当前仅展示问询拉黑的供应商列表，如需查看禁止下单的供应商列表，请前往“供应商管理”列表查看
         </div>
     </div>
 
+    <!-- 新增弹窗 -->
     <div class="modal-overlay" id="addModal">
         <div class="modal">
             <div class="modal-header">
                 新增拉黑供应商
-                <span style="cursor:pointer;color:#999" id="modalCloseBtn">✕</span>
+                <span style="cursor:pointer;color:#999" onclick="closeModal()">✕</span>
             </div>
             <div class="modal-body">
                 <div class="form-item" style="position: relative;">
                     <label class="form-label">供应商旺旺号 <span style="color:red">*</span></label>
-                    <input type="text" class="input-control form-input-full" id="supplierSearch" placeholder="输入旺旺号或公司名搜索...">
-                    <div class="search-results" id="searchResults"><!-- 搜索结果 --></div>
+                    <input type="text" class="input-control form-input-full" id="supplierSearch" placeholder="输入旺旺号或公司名搜索..." oninput="simulateSearch(this.value)">
+                    <div class="search-results" id="searchResults">
+                        <!-- 搜索结果 -->
+                    </div>
                 </div>
                 <div class="form-item">
                     <label class="form-label">供应商公司名称</label>
                     <input type="text" class="input-control form-input-full" id="companyNameInput" placeholder="请输入公司名称（选填）">
                 </div>
+                
                 <div class="form-item">
                     <label class="form-label">拉黑类型 <span style="color:red">*</span></label>
-                    <div class="checkbox-group">
+                    <div class="checkbox-group" style="flex-wrap: wrap;">
                         <label class="checkbox-label"><input type="checkbox" name="blockType" value="找货" checked> 找货</label>
                         <label class="checkbox-label"><input type="checkbox" name="blockType" value="查单" checked> 查单</label>
                         <label class="checkbox-label"><input type="checkbox" name="blockType" value="通知" checked> 通知</label>
                     </div>
                     <div style="font-size: 12px; color: #999; margin-top: 6px;">注：勾选相应类型，系统将屏蔽对应场景的任务。</div>
                 </div>
+
                 <div class="form-item">
                     <label class="form-label">拉黑原因 <span style="color:red">*</span></label>
                     <textarea class="input-control form-input-full" id="blockReason" placeholder="例如：发货极慢，经常缺货，态度恶劣等..."></textarea>
@@ -387,173 +418,255 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn" id="modalCancelBtn">取消</button>
-                <button class="btn btn-primary" id="modalSaveBtn">确认拉黑</button>
+                <button class="btn" onclick="closeModal()">取消</button>
+                <button class="btn btn-primary" onclick="saveBlacklist()">确认拉黑</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 拦截详情弹窗 -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal" style="width: 600px;">
+            <div class="modal-header">
+                <div>拦截明细 - <span id="detailSupplierName"></span></div>
+                <span style="cursor:pointer;color:#999" onclick="closeDetailModal()">✕</span>
+            </div>
+            <div class="modal-body" style="padding: 0;">
+                <table style="border: none;">
+                    <thead>
+                        <tr>
+                            <th style="background: #fff; border-bottom: 2px solid #f0f0f0;">拦截时间</th>
+                            <th style="background: #fff; border-bottom: 2px solid #f0f0f0;">业务类型</th>
+                            <th style="background: #fff; border-bottom: 2px solid #f0f0f0;">触发规则</th>
+                            <th style="background: #fff; border-bottom: 2px solid #f0f0f0;">状态</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detailBody">
+                        <!-- JS 渲染 -->
+                    </tbody>
+                </table>
+                <div id="detailEmpty" style="text-align: center; padding: 30px; color: #999; display: none;">
+                    暂无本月拦截记录
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeDetailModal()">关闭</button>
             </div>
         </div>
     </div>
 
     <script>
-        // 模拟数据
+        // 模拟已存在的数据
+        // 增加 status 字段: 'active' (生效中), 'inactive' (已解除)
+        // 增加 recordId 用于唯一标识每条记录
         let blacklistData = [
             { recordId: 'rec_0', id: 'SUP_9999', wangwang: 'bad_seller_007', companyName: '诚信缺失贸易行', types: ['下单', '找货', '查单', '通知'], interceptCount: 0, reason: '涉嫌售假，平台已通报', time: '2025-01-20 16:00:00', operator: '风控系统', status: 'active' },
             { recordId: 'rec_1', id: 'SUP_1001', wangwang: 'tb_shop_1001', companyName: '义乌市小商品精选店', types: ['找货', '查单'], interceptCount: 42, reason: '多次发错货，且拒绝承担运费', time: '2025-09-01 10:22:11', operator: '张三', status: 'active' },
-            { recordId: 'rec_2', id: 'SUP_2001', wangwang: 'hz_silk_direct', companyName: '杭州丝绸直供', types: ['查单'], interceptCount: 5, reason: '配合度低，多次拒绝提供物流信息', time: '2024-12-11 09:30:00', operator: '李四', status: 'inactive', releaseTime: '2025-01-01 09:00:00' },
-            { recordId: 'rec_3', id: 'SUP_2002', wangwang: 'sh_stationary_fac', companyName: '上海文具用品制造厂', types: ['找货'], interceptCount: 1, reason: '临时缺货，且未提前通知，影响订单交付', time: '2024-11-20 14:00:00', operator: '王五', status: 'inactive', releaseTime: '2024-11-25 10:00:00' }
+            { recordId: 'rec_2', id: 'SUP_2001', wangwang: 'hz_silk_direct', companyName: '杭州丝绸直供', types: ['查单'], interceptCount: 5, reason: '配合度低', time: '2024-12-11 09:30:00', operator: '李四', status: 'inactive', releaseTime: '2025-01-01 09:00:00' },
+            { recordId: 'rec_3', id: 'SUP_2002', wangwang: 'sh_stationary_fac', companyName: '上海文具用品制造厂', types: ['找货'], interceptCount: 1, reason: '临时缺货', time: '2024-11-20 14:00:00', operator: '王五', status: 'inactive', releaseTime: '2024-11-25 10:00:00' }
         ];
+
+        // 模拟全量供应商库（用于搜索）
         const supplierDb = [
             { id: 'SUP_1001', wangwang: 'tb_shop_1001', companyName: '义乌市小商品精选店' },
             { id: 'SUP_1002', wangwang: 'gz_clothing_wh', companyName: '广州服装批发总仓' },
             { id: 'SUP_1003', wangwang: 'sz_elec_factory', companyName: '深圳电子元件厂' },
+            { id: 'SUP_1004', wangwang: 'hz_textile_ltd', companyName: '杭州纺织有限公司' },
             { id: 'SUP_2001', wangwang: 'hz_silk_direct', companyName: '杭州丝绸直供' },
             { id: 'SUP_2002', wangwang: 'sh_stationary_fac', companyName: '上海文具用品制造厂' },
+            { id: 'SUP_2003', wangwang: 'yiwu_acc_c', companyName: '义乌饰品配件C区' },
+            { id: 'SUP_2004', wangwang: 'sz_digi_3c', companyName: '深圳数码3C专营' },
+            { id: 'SUP_2005', wangwang: 'bj_specialty', companyName: '北京特产代发' },
             { id: 'SUP_9999', wangwang: 'bad_seller_007', companyName: '诚信缺失贸易行' }
         ];
 
-        // 全局变量
         let selectedSupplier = null;
-        let currentSortOrder = 'desc';
-        const dom = {
-            filterStatus: document.getElementById('filterStatus'),
-            typeSelectTrigger: document.getElementById('typeSelectTrigger'),
-            typeSelectOptions: document.getElementById('typeSelectOptions'),
-            typeSelectLabel: document.getElementById('typeSelectLabel'),
-            typeCheckboxes: document.querySelectorAll('.type-checkbox'),
-            searchInput: document.getElementById('searchInput'),
-            searchBtn: document.getElementById('searchBtn'),
-            resetBtn: document.getElementById('resetBtn'),
-            refreshIcon: document.getElementById('refreshIcon'),
-            refreshTimeDisplay: document.getElementById('refreshTimeDisplay'),
-            addBlacklistBtn: document.getElementById('addBlacklistBtn'),
-            sortTimeTh: document.getElementById('sortTimeTh'),
-            sortTimeIcon: document.getElementById('sortTimeIcon'),
-            blacklistBody: document.getElementById('blacklistBody'),
-            emptyState: document.getElementById('emptyState'),
-            addModal: document.getElementById('addModal'),
-            modalCloseBtn: document.getElementById('modalCloseBtn'),
-            modalCancelBtn: document.getElementById('modalCancelBtn'),
-            modalSaveBtn: document.getElementById('modalSaveBtn'),
-            supplierSearch: document.getElementById('supplierSearch'),
-            companyNameInput: document.getElementById('companyNameInput'),
-            blockReason: document.getElementById('blockReason'),
-            searchResults: document.getElementById('searchResults'),
-            blockTypeCheckboxes: document.querySelectorAll('input[name="blockType"]')
-        };
+        let currentSortOrder = 'desc'; // 默认倒序
 
-        // 初始化：绑定所有事件（彻底抛弃HTML内onclick）
-        function init() {
-            // 筛选/搜索事件
-            dom.filterStatus.addEventListener('change', renderTable);
-            dom.typeSelectTrigger.addEventListener('click', toggleTypeSelect);
-            dom.typeCheckboxes.forEach(cb => cb.addEventListener('change', () => { updateTypeLabel(); renderTable(); }));
-            dom.searchBtn.addEventListener('click', renderTable);
-            dom.resetBtn.addEventListener('click', resetSearch);
-            dom.refreshIcon.addEventListener('click', refreshList);
-            dom.sortTimeTh.addEventListener('click', toggleSort);
-            // 弹窗事件
-            dom.addBlacklistBtn.addEventListener('click', addBlacklist);
-            dom.modalCloseBtn.addEventListener('click', closeModal);
-            dom.modalCancelBtn.addEventListener('click', closeModal);
-            dom.modalSaveBtn.addEventListener('click', saveBlacklist);
-            dom.supplierSearch.addEventListener('input', (e) => simulateSearch(e.target.value));
-            // 页面空白处关闭下拉
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('#typeMultiSelect')) dom.typeSelectOptions.style.display = 'none';
-                if (!e.target.closest('#supplierSearch') && !e.target.closest('#searchResults')) dom.searchResults.style.display = 'none';
-            });
-            // 初始化渲染
+        // 模拟拦截详细数据
+        function generateMockLogs(count) {
+            const logs = [];
+            const types = ['找货', '查单', '通知'];
+            for(let i=0; i<count; i++) {
+                logs.push({
+                    time: `2025-02-${String(Math.floor(Math.random()*28)+1).padStart(2,'0')} ${String(Math.floor(Math.random()*14)+8).padStart(2,'0')}:${String(Math.floor(Math.random()*59)).padStart(2,'0')}`,
+                    type: types[Math.floor(Math.random() * types.length)],
+                    rule: '黑名单命中',
+                    status: '已拦截'
+                });
+            }
+            // 按时间倒序
+            return logs.sort((a,b) => new Date(b.time) - new Date(a.time));
+        }
+        
+        // 缓存部分数据的日志，避免每次随机变化
+        const logCache = {};
+
+        // Multi-select Logic
+        function toggleTypeSelect(e) {
+            e.stopPropagation();
+            const opts = document.getElementById('typeSelectOptions');
+            const isVisible = opts.style.display === 'block';
+            closeAllSelects();
+            if (!isVisible) {
+                opts.style.display = 'block';
+            }
+        }
+        
+        function closeAllSelects() {
+            document.getElementById('typeSelectOptions').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.closest('.multi-select')) {
+                closeAllSelects();
+            }
+        }
+
+        function updateTypeLabel() {
+            const checkboxes = document.querySelectorAll('#typeSelectOptions input[type="checkbox"]');
+            const checked = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+            const label = document.getElementById('typeSelectLabel');
+            
+            if (checked.length === 0) {
+                label.innerText = '类型: 无';
+            } else if (checked.length === checkboxes.length) {
+                label.innerText = '类型: 全部';
+            } else {
+                label.innerText = `类型: 已选(${checked.length})`;
+            }
+        }
+
+        function refreshList() {
             updateRefreshTime();
+            renderTable();
+            alert('列表已刷新'); // Optional feedback
+        }
+
+        function updateRefreshTime() {
+            const now = new Date();
+            const timeStr = now.getFullYear() + '-' + 
+                String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+                String(now.getDate()).padStart(2, '0') + ' ' + 
+                String(now.getHours()).padStart(2, '0') + ':' + 
+                String(now.getMinutes()).padStart(2, '0') + ':' + 
+                String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('refreshTimeDisplay').innerText = timeStr;
+        }
+
+        // 初始化
+        updateRefreshTime();
+        renderTable();
+
+        function toggleSort() {
+            currentSortOrder = currentSortOrder === 'desc' ? 'asc' : 'desc';
+            const icon = document.getElementById('sortTimeIcon');
+            if (icon) {
+                icon.innerText = currentSortOrder === 'desc' ? '↓' : '↑';
+            }
             renderTable();
         }
 
-        // 核心：解除拉黑函数（100%触发）
-        function releaseBlacklist(recordId) {
-            console.log('触发解除拉黑：', recordId); // 控制台日志，可验证触发
-            const targetItem = blacklistData.find(item => item.recordId === recordId);
-            if (!targetItem) {
-                alert('⚠️ 未找到该供应商记录！');
-                return;
-            }
-            if (confirm('⚠️ 确认解除该供应商的黑名单吗？\n解除后将恢复正常问询功能！')) {
-                targetItem.status = 'inactive';
-                targetItem.releaseTime = new Date().toLocaleString().replace(/\//g, '-');
-                renderTable();
-                const filterVal = dom.filterStatus.value;
-                if (filterVal === 'active') {
-                    setTimeout(() => {
-                        alert('✅ 解除成功！\n该记录已移至「已恢复」列表，可切换筛选查看。');
-                    }, 100);
-                } else {
-                    alert('✅ 解除成功！该供应商已恢复正常状态。');
-                }
-            }
-        }
-
-        // 重新拉黑函数
-        function reBlockSupplier(recordId) {
-            const item = blacklistData.find(i => i.recordId === recordId);
-            if (!item) return;
-            addBlacklist();
-            dom.supplierSearch.value = item.wangwang;
-            dom.companyNameInput.value = item.companyName || '';
-            dom.blockReason.value = item.reason;
-            dom.blockTypeCheckboxes.forEach(cb => {
-                cb.checked = item.types.includes(cb.value);
-            });
-            selectedSupplier = { id: item.id, wangwang: item.wangwang, companyName: item.companyName };
-        }
-
-        // 渲染表格（操作按钮用自定义属性+事件委托）
+        // 渲染表格
         function renderTable() {
-            const searchVal = dom.searchInput.value.trim().toLowerCase();
-            const filterStatus = dom.filterStatus.value;
-            const selectedTypes = Array.from(dom.typeCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
-            dom.blacklistBody.innerHTML = '';
+            const tbody = document.getElementById('blacklistBody');
+            const searchVal = document.getElementById('searchInput').value.trim().toLowerCase();
+            const filterStatus = document.getElementById('filterStatus').value;
+            const typeCheckboxes = document.querySelectorAll('#typeSelectOptions input[type="checkbox"]');
+            const selectedTypes = Array.from(typeCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
+            const emptyState = document.getElementById('emptyState');
+            
+            tbody.innerHTML = '';
 
-            // 过滤数据
             let filtered = blacklistData.filter(item => {
-                const matchText = item.id.toLowerCase().includes(searchVal) || item.wangwang.toLowerCase().includes(searchVal) || (item.companyName && item.companyName.toLowerCase().includes(searchVal));
+                // 文本搜索
+                const matchText = (item.wangwang && item.wangwang.toLowerCase().includes(searchVal)) || 
+                                  (item.companyName && item.companyName.toLowerCase().includes(searchVal)) ||
+                                  item.id.toLowerCase().includes(searchVal);
+                
+                // 状态筛选
                 const matchStatus = filterStatus === 'all' || item.status === filterStatus;
-                const matchType = selectedTypes.length === 0 ? false : item.types.some(t => selectedTypes.includes(t));
+
+                // 类型筛选 (Multi-select)
+                let matchType = false;
+                if (selectedTypes.length === 0) {
+                    matchType = false;
+                } else {
+                    if (item.types && item.types.some(t => selectedTypes.includes(t))) {
+                        matchType = true;
+                    }
+                }
+                
                 return matchText && matchStatus && matchType;
             });
 
-            // 排序
+            // 排序：按最新相关时间排序（生效中=拉黑时间，已解除=恢复时间）
             filtered.sort((a, b) => {
-                const getTime = (item) => new Date((item.status !== 'active' && item.releaseTime ? item.releaseTime : item.time).replace(/-/g, '/')).getTime();
-                return currentSortOrder === 'asc' ? getTime(a) - getTime(b) : getTime(b) - getTime(a);
+                const parseDate = (str) => {
+                    if (!str) return 0;
+                    return new Date(str.replace(/-/g, '/')).getTime();
+                };
+
+                const getTime = (item) => {
+                    if (item.status !== 'active' && item.releaseTime) {
+                        return parseDate(item.releaseTime);
+                    }
+                    return parseDate(item.time);
+                };
+
+                const timeA = getTime(a);
+                const timeB = getTime(b);
+                
+                if (currentSortOrder === 'asc') {
+                    return timeA - timeB;
+                } else {
+                    return timeB - timeA;
+                }
             });
 
-            // 空状态
             if (filtered.length === 0) {
-                dom.emptyState.style.display = 'block';
+                emptyState.style.display = 'block';
                 return;
             }
-            dom.emptyState.style.display = 'none';
+            emptyState.style.display = 'none';
 
-            // 渲染行
-            filtered.forEach(item => {
+            filtered.forEach((item, index) => {
                 let typesHtml = '';
-                item.types.includes('找货') && (typesHtml += '<span class="type-tag type-sourcing">找货</span>');
-                item.types.includes('查单') && (typesHtml += '<span class="type-tag type-check">查单</span>');
-                item.types.includes('通知') && (typesHtml += '<span class="type-tag type-notify">通知</span>');
-                item.types.includes('下单') && (typesHtml += '<span class="type-tag type-order">禁止下单</span>');
-                const countHtml = item.interceptCount > 0 ? `<span class="intercept-count" data-name="${item.wangwang}">${item.interceptCount} 单</span>` : '<span style="color:#ccc">0</span>';
+                if (item.types && item.types.includes('找货')) typesHtml += `<span class="type-tag type-sourcing">找货</span>`;
+                if (item.types && item.types.includes('查单')) typesHtml += `<span class="type-tag type-check">查单</span>`;
+                if (item.types && item.types.includes('通知')) typesHtml += `<span class="type-tag type-notify">通知</span>`;
+                if (!typesHtml) typesHtml = '-';
+
+                // 只有 interceptCount > 0 才加点击事件，且传递 id 以便查找
+                const countHtml = item.interceptCount > 0 
+                    ? `<span class="intercept-count" onclick="showInterceptDetails('${item.id}', '${item.wangwang}', ${item.interceptCount})">${item.interceptCount} 单</span>` 
+                    : `<span style="color:#ccc">0</span>`;
+                
                 const isActive = item.status === 'active';
-                const statusHtml = isActive ? '<span class="tag-blacklist">已拉黑</span>' : '<span class="tag-whitelist">已恢复</span>';
-                const timeHtml = isActive ? `<div style="color:#666;font-size:12px">拉黑: ${item.time.split(' ')[0]}</div>` : `<div style="color:#52c41a;font-size:12px;font-weight:500">恢复: ${item.releaseTime.split(' ')[0]}</div><div style="color:#999;font-size:12px">拉黑: ${item.time.split(' ')[0]}</div>`;
-                // 操作按钮：自定义data属性存recordId，无直接传参
-                const actionHtml = isActive 
-                    ? `<span class="action-link delete operate-btn" data-type="release" data-id="${item.recordId}">解除拉黑</span>` 
-                    : `<span class="action-link operate-btn" data-type="reblock" data-id="${item.recordId}">重新拉黑</span>`;
+                const statusHtml = isActive 
+                    ? `<span class="tag-blacklist">已拉黑</span>` 
+                    : `<span class="tag-whitelist">已恢复</span>`;
+                
+                let timeHtml = '';
+                if (item.status !== 'active' && item.releaseTime) {
+                    timeHtml += `<div style="color:#52c41a;font-size:12px;font-weight:500">恢复: ${item.releaseTime.split(' ')[0]}</div>`;
+                    timeHtml += `<div style="color:#999;font-size:12px">拉黑: ${item.time.split(' ')[0]}</div>`;
+                } else {
+                    timeHtml += `<div style="color:#666;font-size:12px">拉黑: ${item.time.split(' ')[0]}</div>`;
+                }
+
+                const actionHtml = isActive
+                    ? `<span class="action-link delete" onclick="releaseBlacklist('${item.recordId}')">解除拉黑</span>`
+                    : `<span class="action-link" onclick="reBlockSupplier('${item.recordId}')">重新拉黑</span>`;
 
                 const tr = document.createElement('tr');
-                !isActive && (tr.style.background = '#fafafa');
+                if (!isActive) tr.style.background = '#fafafa';
+
                 tr.innerHTML = `
                     <td>${item.id}</td>
                     <td><b>${item.wangwang}</b></td>
                     <td>${item.companyName || '-'}</td>
-                    <td>${typesHtml || '-'}</td>
+                    <td>${typesHtml}</td>
                     <td>${countHtml}</td>
                     <td><div class="reason-text" title="${item.reason}">${item.reason}</div></td>
                     <td>${timeHtml}</td>
@@ -561,119 +674,190 @@
                     <td>${statusHtml}</td>
                     <td>${actionHtml}</td>
                 `;
-                dom.blacklistBody.appendChild(tr);
-            });
-
-            // 表格操作按钮：事件委托（核心！解决所有触发问题）
-            dom.blacklistBody.addEventListener('click', (e) => {
-                const target = e.target.closest('.operate-btn');
-                const interceptTarget = e.target.closest('.intercept-count');
-                if (target) {
-                    const type = target.dataset.type;
-                    const id = target.dataset.id;
-                    type === 'release' ? releaseBlacklist(id) : reBlockSupplier(id);
-                }
-                if (interceptTarget) {
-                    showInterceptDetails(interceptTarget.dataset.name);
-                }
+                tbody.appendChild(tr);
             });
         }
 
-        // 其他工具函数（均为原生JS，无兼容问题）
-        function toggleTypeSelect() {
-            dom.typeSelectOptions.style.display = dom.typeSelectOptions.style.display === 'block' ? 'none' : 'block';
+        function showInterceptDetails(id, name, count) {
+             // 1. 设置标题
+             document.getElementById('detailSupplierName').innerText = name;
+             
+             // 2. 获取或生成数据
+             let logs = logCache[id];
+             if (!logs) {
+                 logs = generateMockLogs(count);
+                 logCache[id] = logs;
+             }
+             
+             // 3. 渲染列表
+             const tbody = document.getElementById('detailBody');
+             const empty = document.getElementById('detailEmpty');
+             tbody.innerHTML = '';
+             
+             if (logs.length === 0) {
+                 empty.style.display = 'block';
+             } else {
+                 empty.style.display = 'none';
+                 logs.forEach(log => {
+                     const tr = document.createElement('tr');
+                     let typeClass = '';
+                     if(log.type === '找货') typeClass = 'type-sourcing';
+                     else if(log.type === '查单') typeClass = 'type-check';
+                     else if(log.type === '通知') typeClass = 'type-notify';
+                     
+                     tr.innerHTML = `
+                        <td style="color:#666">${log.time}</td>
+                        <td><span class="type-tag ${typeClass}">${log.type}</span></td>
+                        <td>${log.rule}</td>
+                        <td><span style="color:#ff4d4f;background:#fff1f0;padding:2px 6px;border-radius:2px;font-size:12px;">🚫 ${log.status}</span></td>
+                     `;
+                     tbody.appendChild(tr);
+                 });
+             }
+
+             // 4. 显示弹窗
+             document.getElementById('detailModal').style.display = 'flex';
         }
-        function updateTypeLabel() {
-            const checked = Array.from(dom.typeCheckboxes).filter(cb => cb.checked);
-            dom.typeSelectLabel.innerText = checked.length === 3 ? '类型: 全部' : checked.length === 0 ? '类型: 无' : `类型: 已选(${checked.length})`;
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').style.display = 'none';
         }
-        function updateRefreshTime() {
-            const now = new Date();
-            const timeStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,0)}-${String(now.getDate()).padStart(2,0)} ${String(now.getHours()).padStart(2,0)}:${String(now.getMinutes()).padStart(2,0)}:${String(now.getSeconds()).padStart(2,0)}`;
-            dom.refreshTimeDisplay.innerText = timeStr;
-        }
-        function refreshList() {
-            updateRefreshTime();
-            renderTable();
-            alert('✅ 列表已刷新');
-        }
-        function toggleSort() {
-            currentSortOrder = currentSortOrder === 'desc' ? 'asc' : 'desc';
-            dom.sortTimeIcon.innerText = currentSortOrder === 'desc' ? '↓' : '↑';
-            renderTable();
-        }
+
         function resetSearch() {
-            dom.searchInput.value = '';
-            dom.filterStatus.value = 'all';
-            dom.typeCheckboxes.forEach(cb => cb.checked = true);
+            document.getElementById('searchInput').value = '';
+            document.getElementById('filterStatus').value = 'all'; 
+            document.querySelectorAll('#typeSelectOptions input[type="checkbox"]').forEach(cb => cb.checked = true);
             updateTypeLabel();
             renderTable();
         }
+
         function addBlacklist() {
-            dom.addModal.style.display = 'flex';
-            dom.supplierSearch.value = '';
-            dom.companyNameInput.value = '';
-            dom.blockReason.value = '';
-            dom.searchResults.style.display = 'none';
-            dom.blockTypeCheckboxes.forEach(cb => cb.checked = true);
+            document.getElementById('addModal').style.display = 'flex';
+            document.getElementById('supplierSearch').value = '';
+            document.getElementById('companyNameInput').value = ''; 
+            document.getElementById('blockReason').value = '';
+            document.getElementById('searchResults').style.display = 'none';
+            document.querySelectorAll('input[name="blockType"]').forEach(cb => cb.checked = true);
             selectedSupplier = null;
         }
+
         function closeModal() {
-            dom.addModal.style.display = 'none';
+            document.getElementById('addModal').style.display = 'none';
         }
+
         function simulateSearch(val) {
+            const resultBox = document.getElementById('searchResults');
             if (!val) {
-                dom.searchResults.style.display = 'none';
+                resultBox.style.display = 'none';
                 return;
             }
-            const results = supplierDb.filter(s => (s.wangwang.includes(val) || s.companyName.includes(val)) && !blacklistData.find(b => b.id === s.id && b.status === 'active'));
-            dom.searchResults.innerHTML = results.length > 0 ? results.map(s => `<div class="search-result-item" data-id="${s.id}" data-wangwang="${s.wangwang}" data-company="${s.companyName}"><span style="font-weight:bold">${s.wangwang}</span> <span style="color:#666;font-size:12px">(${s.companyName})</span></div>`).join('') : '<div style="padding:8px;color:#999">未找到匹配供应商或已拉黑</div>';
-            dom.searchResults.style.display = 'block';
-            // 搜索结果点击
-            dom.searchResults.addEventListener('click', (e) => {
-                const item = e.target.closest('.search-result-item');
-                if (item) {
-                    selectedSupplier = {
-                        id: item.dataset.id,
-                        wangwang: item.dataset.wangwang,
-                        companyName: item.dataset.company
-                    };
-                    dom.supplierSearch.value = selectedSupplier.wangwang;
-                    dom.companyNameInput.value = selectedSupplier.companyName;
-                    dom.searchResults.style.display = 'none';
-                }
-            });
+            
+            const results = supplierDb.filter(s => 
+                (s.wangwang.includes(val) || s.companyName.includes(val)) && 
+                !blacklistData.find(b => b.id === s.id && b.status === 'active')
+            );
+            
+            if (results.length > 0) {
+                resultBox.innerHTML = results.map(s => `
+                    <div class="search-result-item" onclick="selectSupplier('${s.id}', '${s.wangwang}', '${s.companyName}')">
+                        <span style="font-weight:bold">${s.wangwang}</span> 
+                        <span style="color:#666;font-size:12px">(${s.companyName})</span>
+                    </div>
+                `).join('');
+                resultBox.style.display = 'block';
+            } else {
+                resultBox.innerHTML = '<div style="padding:8px;color:#999">未找到匹配的供应商或已在黑名单中</div>';
+                resultBox.style.display = 'block';
+            }
         }
+
+        function selectSupplier(id, wangwang, companyName) {
+            selectedSupplier = { id, wangwang, companyName };
+            document.getElementById('supplierSearch').value = wangwang;
+            document.getElementById('companyNameInput').value = companyName;
+            document.getElementById('searchResults').style.display = 'none';
+        }
+
         function saveBlacklist() {
-            const reason = dom.blockReason.value.trim();
-            const searchInput = dom.supplierSearch.value.trim();
-            const selectedTypes = Array.from(dom.blockTypeCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
-            if (!selectedSupplier && !searchInput) { alert('请填写/搜索旺旺号！'); return; }
-            if (selectedTypes.length === 0) { alert('请选择拉黑类型！'); return; }
-            if (!reason) { alert('请填写拉黑原因！'); return; }
+            const reason = document.getElementById('blockReason').value;
+            const searchInput = document.getElementById('supplierSearch').value;
+            const companyInput = document.getElementById('companyNameInput').value;
+            
+            const selectedTypes = [];
+            document.querySelectorAll('input[name="blockType"]:checked').forEach(cb => {
+                selectedTypes.push(cb.value);
+            });
+
+            if (!selectedSupplier && !searchInput) {
+                alert('请填写供应商旺旺号');
+                return;
+            }
+
+            if (selectedTypes.length === 0) {
+                alert('请至少选择一个拉黑类型');
+                return;
+            }
+
             const newItem = {
                 recordId: 'rec_' + Date.now(),
-                id: selectedSupplier ? selectedSupplier.id : ('SUP_NEW_' + Math.floor(Math.random()*10000)),
+                id: selectedSupplier ? selectedSupplier.id : ('SUP_NEW_' + Math.floor(Math.random()*1000)),
                 wangwang: selectedSupplier ? selectedSupplier.wangwang : searchInput,
-                companyName: selectedSupplier ? selectedSupplier.companyName : dom.companyNameInput.value.trim() || '-',
+                companyName: selectedSupplier ? selectedSupplier.companyName : companyInput,
                 types: selectedTypes,
-                interceptCount: 0,
-                reason: reason,
-                time: new Date().toLocaleString().replace(/\//g, '-'),
+                interceptCount: 0, 
+                reason: reason || '未填写原因',
+                time: new Date().toLocaleString().replace(/\//g,'-'),
                 operator: '当前用户',
                 status: 'active'
             };
+
             blacklistData.unshift(newItem);
             renderTable();
             closeModal();
-            alert(`✅ 拉黑成功！\n供应商：${newItem.wangwang}\n类型：${selectedTypes.join('、')}`);
-        }
-        function showInterceptDetails(name) {
-            alert(`【拦截明细】\n供应商：${name}\n（功能开发中，暂未实现）`);
+            alert(`已将【${newItem.wangwang}】加入黑名单，类型：${selectedTypes.join('、')}。`);
         }
 
-        // 启动页面
-        window.onload = init;
+        function reBlockSupplier(recordId) {
+            const item = blacklistData.find(i => i.recordId === recordId);
+            if (!item) return;
+
+            addBlacklist();
+            
+            document.getElementById('supplierSearch').value = item.wangwang;
+            document.getElementById('companyNameInput').value = item.companyName || '';
+            
+            selectedSupplier = { id: item.id, wangwang: item.wangwang, companyName: item.companyName };
+        }
+
+        function releaseBlacklist(recordId) {
+            if(confirm('确定要解除该供应商的黑名单吗？\n解除后，该供应商将恢复正常，可以生成问询任务。')) {
+                const target = blacklistData.find(item => item.recordId === recordId);
+                if (target) {
+                    target.status = 'inactive';
+                    target.releaseTime = new Date().toLocaleString().replace(/\//g,'-');
+                    target.releaseOperator = '当前用户';
+                    
+                    renderTable();
+                    
+                    const currentFilter = document.getElementById('filterStatus').value;
+                    if (currentFilter === 'active') {
+                        setTimeout(() => {
+                            alert(`供应商已恢复正常！\n\n当前筛选仅显示[生效中]的数据，该记录已移至[已解除]列表。`);
+                        }, 100);
+                    }
+                }
+            }
+        }
+
+        document.getElementById('addModal').addEventListener('click', (e) => {
+            if (e.target.id === 'addModal') closeModal();
+        });
+
+        // 增加明细弹窗的遮罩点击关闭
+        document.getElementById('detailModal').addEventListener('click', (e) => {
+            if (e.target.id === 'detailModal') closeDetailModal();
+        });
+
     </script>
 </body>
 </html>
