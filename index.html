@@ -307,6 +307,28 @@
             padding: 40px;
             color: #999;
         }
+
+        /* Toast 消息提示 */
+        .toast-message {
+            position: fixed;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 4px;
+            z-index: 3000;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            pointer-events: none;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .toast-message.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -483,6 +505,22 @@
         let selectedSupplier = null;
         let currentSortOrder = 'desc'; // 默认倒序
 
+        // Toast 消息提示函数
+        function showToast(msg, duration = 3000) {
+            const div = document.createElement('div');
+            div.className = 'toast-message';
+            div.innerText = msg;
+            document.body.appendChild(div);
+            // 触发动画
+            requestAnimationFrame(() => {
+                div.classList.add('show');
+            });
+            setTimeout(() => {
+                div.classList.remove('show');
+                setTimeout(() => div.remove(), 300);
+            }, duration);
+        }
+
         // 模拟拦截详细数据
         function generateMockLogs(count) {
             const logs = [];
@@ -540,7 +578,7 @@
         function refreshList() {
             updateRefreshTime();
             renderTable();
-            alert('列表已刷新'); // Optional feedback
+            showToast('列表已刷新');
         }
 
         function updateRefreshTime() {
@@ -789,12 +827,12 @@
             });
 
             if (!selectedSupplier && !searchInput) {
-                alert('请填写供应商旺旺号');
+                showToast('请填写供应商旺旺号');
                 return;
             }
 
             if (selectedTypes.length === 0) {
-                alert('请至少选择一个拉黑类型');
+                showToast('请至少选择一个拉黑类型');
                 return;
             }
 
@@ -814,7 +852,7 @@
             blacklistData.unshift(newItem);
             renderTable();
             closeModal();
-            alert(`已将【${newItem.wangwang}】加入黑名单，类型：${selectedTypes.join('、')}。`);
+            showToast(`已将【${newItem.wangwang}】加入黑名单`);
         }
 
         function reBlockSupplier(recordId) {
@@ -841,9 +879,9 @@
                     
                     const currentFilter = document.getElementById('filterStatus').value;
                     if (currentFilter === 'active') {
-                        setTimeout(() => {
-                            alert(`供应商已恢复正常！\n\n当前筛选仅显示[生效中]的数据，该记录已移至[已解除]列表。`);
-                        }, 100);
+                        showToast(`供应商已恢复正常！已移至[已解除]列表。`);
+                    } else {
+                        showToast(`供应商已恢复正常！`);
                     }
                 }
             }
