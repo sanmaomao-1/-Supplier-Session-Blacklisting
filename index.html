@@ -367,6 +367,8 @@
                     刷新时间: <span id="refreshTimeDisplay">--</span>
                     <i style="cursor: pointer; margin-left: 4px;" onclick="refreshList()" title="刷新列表">↻</i>
                 </span>
+               
+               
                 <button class="btn btn-danger" onclick="addBlacklist()">+ 新增拉黑供应商</button>
             </div>
         </div>
@@ -382,7 +384,7 @@
                     <th width="80">本月拦截</th>
                     <th>拉黑原因</th>
                     <th width="160" style="cursor: pointer; user-select: none;" onclick="toggleSort()" title="点击切换按时间排序">
-                        时间信息 <span id="sortTimeIcon">↓</span>
+                        时间 <span id="sortTimeIcon">↓</span>
                     </th>
                     <th width="80">操作人</th>
                     <th width="80">状态</th>
@@ -473,6 +475,36 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary" onclick="closeDetailModal()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 操作日志弹窗 -->
+    <div class="modal-overlay" id="logModal">
+        <div class="modal" style="width: 700px;">
+            <div class="modal-header">
+                <div>操作日志</div>
+                <span style="cursor:pointer;color:#999" onclick="closeLogModal()">✕</span>
+            </div>
+            <div class="modal-body" style="padding: 0;">
+                <table style="border: none;">
+                    <thead>
+                        <tr>
+                            <th style="background: #fff; border-bottom: 2px solid #f0f0f0; width: 160px;">操作时间</th>
+                            <th style="background: #fff; border-bottom: 2px solid #f0f0f0; width: 100px;">操作人</th>
+                            <th style="background: #fff; border-bottom: 2px solid #f0f0f0;">操作内容</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logBody">
+                        <!-- JS 渲染 -->
+                    </tbody>
+                </table>
+                <div id="logEmpty" style="text-align: center; padding: 30px; color: #999; display: none;">
+                    暂无操作记录
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeLogModal()">关闭</button>
             </div>
         </div>
     </div>
@@ -696,7 +728,7 @@
                 const actionHtml = isActive
                     ? `<span class="action-link delete" onclick="releaseBlacklist('${item.recordId}')">解除拉黑</span>`
                     : `<span class="action-link" onclick="reBlockSupplier('${item.recordId}')">重新拉黑</span>`;
-
+            
                 const tr = document.createElement('tr');
                 if (!isActive) tr.style.background = '#fafafa';
 
@@ -710,7 +742,7 @@
                     <td>${timeHtml}</td>
                     <td>${item.operator}</td>
                     <td>${statusHtml}</td>
-                    <td>${actionHtml}</td>
+                    <td>${actionHtml}<span class="action-link" onclick="showLog('${item.id}')">日志</span></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -745,7 +777,7 @@
                      
                      tr.innerHTML = `
                         <td style="color:#666">${log.time}</td>
-                        <td><span class="type-tag ${typeClass}">${log.type}</span></td>
+                        <td><span class="type-tag ${typeClass}">${log.type}</td>
                         <td>${log.rule}</td>
                         <td><span style="color:#ff4d4f;background:#fff1f0;padding:2px 6px;border-radius:2px;font-size:12px;">🚫 ${log.status}</span></td>
                      `;
@@ -850,6 +882,10 @@
             };
 
             blacklistData.unshift(newItem);
+            
+            // 记录日志
+            addSystemLog(`新增拉黑供应商：${newItem.wangwang} (${newItem.id})`);
+            
             renderTable();
             closeModal();
             showToast(`已将【${newItem.wangwang}】加入黑名单`);
@@ -875,6 +911,9 @@
                     target.releaseTime = new Date().toLocaleString().replace(/\//g,'-');
                     target.releaseOperator = '当前用户';
                     
+                    // 记录日志
+                    addSystemLog(`解除拉黑：${target.wangwang} (${target.id})`);
+
                     renderTable();
                     
                     const currentFilter = document.getElementById('filterStatus').value;
@@ -886,6 +925,105 @@
                 }
             }
         }
+
+        function exportData() {
+            // 生成 CSV 内容
+            const headers = ['供应商ID', '供应商旺旺号', '供应商公司名称', '拉黑类型', '本月拦截数', '拉黑原因', '拉黑时间', '操作人', '状态'];
+            const rows = blacklistData.map(item => [
+                item.id,
+                item.wangwang,
+                item.companyName || '',
+                item.types.join('/'),
+                item.interceptCount,
+                item.reason,
+                item.time,
+                item.operator,
+                item.status === 'active' ? '已拉黑' : '已恢复'
+            ]);
+            
+            let csvContent = "\uFEFF" + headers.join(",") + "\n" + rows.map(e => e.join(",")).join("\n");
+            
+            // 创建下载链接
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", "blacklist_export.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // 记录日志
+            addSystemLog('导出黑名单数据');
+            showToast('数据导出成功！已保存为 blacklist_export.csv');
+        }
+
+        function showLog(filterId) {
+            renderSystemLogs(filterId);
+            document.getElementById('logModal').style.display = 'flex';
+        }
+
+        function closeLogModal() {
+            document.getElementById('logModal').style.display = 'none';
+            // 简单实现点击遮罩关闭
+        }
+        
+        document.getElementById('logModal').addEventListener('click', (e) => {
+            if (e.target.id === 'logModal') closeLogModal();
+        });
+
+        function renderSystemLogs(filterId) {
+            const tbody = document.getElementById('logBody');
+            const empty = document.getElementById('logEmpty');
+            tbody.innerHTML = '';
+            
+            // 按时间倒序
+            let sortedLogs = [...systemLogs].sort((a, b) => new Date(b.time) - new Date(a.time));
+
+            if (filterId && typeof filterId === 'string') {
+                sortedLogs = sortedLogs.filter(log => log.content.includes(filterId));
+            }
+
+            if (sortedLogs.length === 0) {
+                empty.style.display = 'block';
+            } else {
+                empty.style.display = 'none';
+                sortedLogs.forEach(log => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td style="color:#666">${log.time}</td>
+                        <td>${log.operator}</td>
+                        <td>${log.content}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+        }
+        
+        function addSystemLog(content) {
+             const now = new Date();
+             const timeStr = now.getFullYear() + '-' + 
+                String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+                String(now.getDate()).padStart(2, '0') + ' ' + 
+                String(now.getHours()).padStart(2, '0') + ':' + 
+                String(now.getMinutes()).padStart(2, '0') + ':' + 
+                String(now.getSeconds()).padStart(2, '0');
+                
+             systemLogs.unshift({
+                 id: Date.now(),
+                 time: timeStr,
+                 operator: '当前用户',
+                 content: content
+             });
+        }
+
+        // 模拟系统操作日志数据
+        let systemLogs = [
+            { id: 1, time: '2025-02-02 14:20:01', operator: '张三', content: '新增拉黑供应商：义乌市小商品精选店 (SUP_1001)' },
+            { id: 2, time: '2025-02-02 09:15:33', operator: '李四', content: '解除拉黑：杭州丝绸直供 (SUP_2001)' },
+            { id: 3, time: '2025-02-01 16:45:10', operator: 'Admin', content: '导出黑名单数据' },
+            { id: 4, time: '2025-01-20 16:00:00', operator: '风控系统', content: '自动拉黑：诚信缺失贸易行 (SUP_9999)' }
+        ];
 
         document.getElementById('addModal').addEventListener('click', (e) => {
             if (e.target.id === 'addModal') closeModal();
@@ -899,4 +1037,5 @@
     </script>
 </body>
 </html>
+
 
