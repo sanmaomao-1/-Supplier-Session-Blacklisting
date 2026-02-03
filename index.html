@@ -329,6 +329,74 @@
             transform: translateX(-50%) translateY(0);
             opacity: 1;
         }
+
+        /* 分页样式 */
+        .pagination {
+            display: flex;
+            justify-content: flex-end;
+            padding-top: 20px;
+            align-items: center;
+        }
+        .page-item {
+            display: inline-block;
+            padding: 5px 12px;
+            border: 1px solid #d9d9d9;
+            margin-left: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            user-select: none;
+            font-size: 13px;
+        }
+        .page-item:hover:not(.disabled) {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        .page-item.active {
+            background: var(--primary-color);
+            color: #fff;
+            border-color: var(--primary-color);
+        }
+        .page-item.disabled {
+            color: #ccc;
+            cursor: not-allowed;
+            background: #f5f5f5;
+            border-color: #d9d9d9;
+        }
+
+        /* 筛选区新样式 */
+        .filter-section {
+            background: #f9f9f9;
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            border: 1px solid #eee;
+        }
+        .filter-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .filter-row:last-child { margin-bottom: 0; }
+        .filter-label {
+            width: 100px;
+            font-weight: 500;
+            color: #333;
+            text-align: right;
+            margin-right: 12px;
+        }
+        .filter-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .radio-label, .check-label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -336,40 +404,34 @@
     <div class="breadcrumb">AI插件 / <b>供应商会话拉黑</b></div>
 
     <div class="layout-container">
-        <!-- 顶部操作栏 -->
-        <div class="action-bar">
-            <div class="search-group">
-                <select id="filterStatus" class="input-control" style="width: 110px;" onchange="renderTable()">
-                    <option value="all" selected>状态: 全部</option>
-                    <option value="active">已拉黑</option>
-                    <option value="inactive">已恢复</option>
-                </select>
-                
-                <!-- Multi-select for Type -->
-                <div class="multi-select" id="typeMultiSelect">
-                    <div class="select-trigger" onclick="toggleTypeSelect(event)">
-                        <span id="typeSelectLabel">类型: 全部</span>
-                        <small>▼</small>
-                    </div>
-                    <div class="select-options" id="typeSelectOptions">
-                        <label><input type="checkbox" value="找货" checked onchange="updateTypeLabel(); renderTable()"> 找货</label>
-                        <label><input type="checkbox" value="查单" checked onchange="updateTypeLabel(); renderTable()"> 查单</label>
-                        <label><input type="checkbox" value="通知" checked onchange="updateTypeLabel(); renderTable()"> 通知</label>
-                    </div>
+        <!-- 筛选区域 -->
+        <div class="filter-section">
+            <div class="filter-row">
+                <div class="filter-label">拉黑状态:</div>
+                <div class="filter-content">
+                    <label class="radio-label"><input type="radio" name="filterStatus" value="all" checked onchange="resetPageAndRender()"> 全部</label>
+                    <label class="radio-label"><input type="radio" name="filterStatus" value="active" onchange="resetPageAndRender()"> 已拉黑</label>
+                    <label class="radio-label"><input type="radio" name="filterStatus" value="inactive" onchange="resetPageAndRender()"> 已恢复</label>
                 </div>
-
-                <input type="text" class="input-control" placeholder="搜索旺旺号/公司名/ID" id="searchInput">
-                <button class="btn btn-primary" onclick="renderTable()">搜索</button>
-                <button class="btn" onclick="resetSearch()">重置</button>
             </div>
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <span style="font-size: 13px; color: #666;">
-                    刷新时间: <span id="refreshTimeDisplay">--</span>
-                    <i style="cursor: pointer; margin-left: 4px;" onclick="refreshList()" title="刷新列表">↻</i>
-                </span>
-               
-               
-                <button class="btn btn-danger" onclick="addBlacklist()">+ 新增拉黑供应商</button>
+            <div class="filter-row">
+                <div class="filter-label">拉黑类型:</div>
+                <div class="filter-content">
+                    <label class="check-label"><input type="checkbox" name="filterType" value="找货" checked onchange="resetPageAndRender()"> 找货</label>
+                    <label class="check-label"><input type="checkbox" name="filterType" value="查单" checked onchange="resetPageAndRender()"> 查单</label>
+                    <label class="check-label"><input type="checkbox" name="filterType" value="通知" checked onchange="resetPageAndRender()"> 通知</label>
+                </div>
+            </div>
+            <div class="filter-row">
+                <div class="filter-label">供应商旺旺号:</div>
+                <div class="filter-content" style="flex: 1; justify-content: space-between;">
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" class="input-control" placeholder="输入旺旺号/公司名/ID模糊搜索" id="searchInput" style="width: 250px;">
+                        <button class="btn btn-primary" onclick="resetPageAndRender()">搜索</button>
+                        <button class="btn" onclick="resetSearch()">重置</button>
+                    </div>
+                    <button class="btn btn-danger" onclick="addBlacklist()">+ 新增拉黑供应商</button>
+                </div>
             </div>
         </div>
 
@@ -381,14 +443,13 @@
                     <th width="150">供应商旺旺号</th>
                     <th width="200">供应商公司名称</th>
                     <th width="150">拉黑类型</th>
-                    <th width="80">本月拦截</th>
+                    <th width="160">本月拦截</th>
                     <th>拉黑原因</th>
-                    <th width="160" style="cursor: pointer; user-select: none;" onclick="toggleSort()" title="点击切换按时间排序">
-                        时间 <span id="sortTimeIcon">↓</span>
-                    </th>
+                    <th width="140">拉黑时间</th>
+                    <th width="140">恢复正常时间</th>
                     <th width="80">操作人</th>
-                    <th width="80">状态</th>
-                    <th width="100">操作</th>
+                    <th width="80">拉黑状态</th>
+                    <th width="120">操作</th>
                 </tr>
             </thead>
             <tbody id="blacklistBody">
@@ -398,6 +459,11 @@
         
         <div id="emptyState" class="empty-state" style="display: none;">
             暂无拉黑数据
+        </div>
+
+        <!-- 分页 -->
+        <div class="pagination" id="pagination">
+            <!-- JS 渲染分页 -->
         </div>
 
         <div style="margin-top: 20px; text-align: center; color: #999; font-size: 13px;">
@@ -511,13 +577,27 @@
 
     <script>
         // 模拟已存在的数据
-        // 增加 status 字段: 'active' (生效中), 'inactive' (已解除)
-        // 增加 recordId 用于唯一标识每条记录
+        // 增加 breakdown 字段模拟各类型拦截数
         let blacklistData = [
-            { recordId: 'rec_0', id: 'SUP_9999', wangwang: 'bad_seller_007', companyName: '诚信缺失贸易行', types: ['下单', '找货', '查单', '通知'], interceptCount: 0, reason: '涉嫌售假，平台已通报', time: '2025-01-20 16:00:00', operator: '风控系统', status: 'active' },
-            { recordId: 'rec_1', id: 'SUP_1001', wangwang: 'tb_shop_1001', companyName: '义乌市小商品精选店', types: ['找货', '查单'], interceptCount: 42, reason: '多次发错货，且拒绝承担运费', time: '2025-09-01 10:22:11', operator: '张三', status: 'active' },
-            { recordId: 'rec_2', id: 'SUP_2001', wangwang: 'hz_silk_direct', companyName: '杭州丝绸直供', types: ['查单'], interceptCount: 5, reason: '配合度低', time: '2024-12-11 09:30:00', operator: '李四', status: 'inactive', releaseTime: '2025-01-01 09:00:00' },
-            { recordId: 'rec_3', id: 'SUP_2002', wangwang: 'sh_stationary_fac', companyName: '上海文具用品制造厂', types: ['找货'], interceptCount: 1, reason: '临时缺货', time: '2024-11-20 14:00:00', operator: '王五', status: 'inactive', releaseTime: '2024-11-25 10:00:00' }
+            { recordId: 'rec_0', id: 'SUP_9999', wangwang: 'bad_seller_007', companyName: '诚信缺失贸易行', types: ['找货', '查单', '通知'], interceptCount: 0, reason: '涉嫌售假，平台已通报', time: '2025-01-20 16:00:00', releaseTime: '', operator: '风控系统', status: 'active' },
+            { recordId: 'rec_1', id: 'SUP_1001', wangwang: 'tb_shop_1001', companyName: '义乌市小商品精选店', types: ['找货', '查单'], interceptCount: 42, breakdown: { '找货': 12, '查单': 30 }, reason: '多次发错货，且拒绝承担运费', time: '2025-09-01 10:22:11', releaseTime: '', operator: '张三', status: 'active' },
+            { recordId: 'rec_2', id: 'SUP_2001', wangwang: 'hz_silk_direct', companyName: '杭州丝绸直供', types: ['查单'], interceptCount: 5, breakdown: { '查单': 5 }, reason: '配合度低', time: '2024-12-11 09:30:00', releaseTime: '2025-01-01 09:00:00', operator: '李四', status: 'inactive' },
+            { recordId: 'rec_3', id: 'SUP_2002', wangwang: 'sh_stationary_fac', companyName: '上海文具用品制造厂', types: ['找货'], interceptCount: 1, breakdown: { '找货': 1 }, reason: '临时缺货', time: '2024-11-20 14:00:00', releaseTime: '2024-11-25 10:00:00', operator: '王五', status: 'inactive' },
+            // 生成更多模拟数据以测试分页
+            ...Array.from({ length: 25 }, (_, i) => ({
+                recordId: `rec_mock_${i}`,
+                id: `SUP_${3000+i}`,
+                wangwang: `mock_supplier_${i}`,
+                companyName: `模拟供应商${i}号公司`,
+                types: i % 2 === 0 ? ['找货'] : ['查单', '通知'],
+                interceptCount: i % 3 === 0 ? 10 : 0,
+                breakdown: i % 3 === 0 ? (i % 2 === 0 ? {'找货': 10} : {'查单': 6, '通知': 4}) : {},
+                reason: '模拟批量数据测试分页显示',
+                time: '2024-10-01 12:00:00',
+                releaseTime: i % 4 === 0 ? '2024-10-05 12:00:00' : '',
+                operator: '系统测试',
+                status: i % 4 === 0 ? 'inactive' : 'active'
+            }))
         ];
 
         // 模拟全量供应商库（用于搜索）
@@ -535,7 +615,11 @@
         ];
 
         let selectedSupplier = null;
-        let currentSortOrder = 'desc'; // 默认倒序
+        
+        // 分页相关变量
+        let currentPage = 1;
+        const pageSize = 10;
+        let totalItems = 0;
 
         // Toast 消息提示函数
         function showToast(msg, duration = 3000) {
@@ -572,68 +656,11 @@
         // 缓存部分数据的日志，避免每次随机变化
         const logCache = {};
 
-        // Multi-select Logic
-        function toggleTypeSelect(e) {
-            e.stopPropagation();
-            const opts = document.getElementById('typeSelectOptions');
-            const isVisible = opts.style.display === 'block';
-            closeAllSelects();
-            if (!isVisible) {
-                opts.style.display = 'block';
-            }
-        }
-        
-        function closeAllSelects() {
-            document.getElementById('typeSelectOptions').style.display = 'none';
-        }
-
-        window.onclick = function(event) {
-            if (!event.target.closest('.multi-select')) {
-                closeAllSelects();
-            }
-        }
-
-        function updateTypeLabel() {
-            const checkboxes = document.querySelectorAll('#typeSelectOptions input[type="checkbox"]');
-            const checked = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
-            const label = document.getElementById('typeSelectLabel');
-            
-            if (checked.length === 0) {
-                label.innerText = '类型: 无';
-            } else if (checked.length === checkboxes.length) {
-                label.innerText = '类型: 全部';
-            } else {
-                label.innerText = `类型: 已选(${checked.length})`;
-            }
-        }
-
-        function refreshList() {
-            updateRefreshTime();
-            renderTable();
-            showToast('列表已刷新');
-        }
-
-        function updateRefreshTime() {
-            const now = new Date();
-            const timeStr = now.getFullYear() + '-' + 
-                String(now.getMonth() + 1).padStart(2, '0') + '-' + 
-                String(now.getDate()).padStart(2, '0') + ' ' + 
-                String(now.getHours()).padStart(2, '0') + ':' + 
-                String(now.getMinutes()).padStart(2, '0') + ':' + 
-                String(now.getSeconds()).padStart(2, '0');
-            document.getElementById('refreshTimeDisplay').innerText = timeStr;
-        }
-
         // 初始化
-        updateRefreshTime();
         renderTable();
 
-        function toggleSort() {
-            currentSortOrder = currentSortOrder === 'desc' ? 'asc' : 'desc';
-            const icon = document.getElementById('sortTimeIcon');
-            if (icon) {
-                icon.innerText = currentSortOrder === 'desc' ? '↓' : '↑';
-            }
+        function resetPageAndRender() {
+            currentPage = 1;
             renderTable();
         }
 
@@ -641,9 +668,12 @@
         function renderTable() {
             const tbody = document.getElementById('blacklistBody');
             const searchVal = document.getElementById('searchInput').value.trim().toLowerCase();
-            const filterStatus = document.getElementById('filterStatus').value;
-            const typeCheckboxes = document.querySelectorAll('#typeSelectOptions input[type="checkbox"]');
-            const selectedTypes = Array.from(typeCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
+            
+            // 获取新控件的值
+            const filterStatus = document.querySelector('input[name="filterStatus"]:checked').value;
+            const typeCheckboxes = document.querySelectorAll('input[name="filterType"]:checked');
+            const selectedTypes = Array.from(typeCheckboxes).map(cb => cb.value);
+            
             const emptyState = document.getElementById('emptyState');
             
             tbody.innerHTML = '';
@@ -657,10 +687,10 @@
                 // 状态筛选
                 const matchStatus = filterStatus === 'all' || item.status === filterStatus;
 
-                // 类型筛选 (Multi-select)
+                // 类型筛选
                 let matchType = false;
                 if (selectedTypes.length === 0) {
-                    matchType = false;
+                    matchType = false; 
                 } else {
                     if (item.types && item.types.some(t => selectedTypes.includes(t))) {
                         matchType = true;
@@ -670,60 +700,52 @@
                 return matchText && matchStatus && matchType;
             });
 
-            // 排序：按最新相关时间排序（生效中=拉黑时间，已解除=恢复时间）
-            filtered.sort((a, b) => {
-                const parseDate = (str) => {
-                    if (!str) return 0;
-                    return new Date(str.replace(/-/g, '/')).getTime();
-                };
+            // 排序 (默认按拉黑时间倒序)
+            filtered.sort((a, b) => new Date(b.time) - new Date(a.time));
 
-                const getTime = (item) => {
-                    if (item.status !== 'active' && item.releaseTime) {
-                        return parseDate(item.releaseTime);
-                    }
-                    return parseDate(item.time);
-                };
+            totalItems = filtered.length;
+            renderPagination();
 
-                const timeA = getTime(a);
-                const timeB = getTime(b);
-                
-                if (currentSortOrder === 'asc') {
-                    return timeA - timeB;
-                } else {
-                    return timeB - timeA;
-                }
-            });
-
-            if (filtered.length === 0) {
+            if (totalItems === 0) {
                 emptyState.style.display = 'block';
+                document.getElementById('pagination').style.display = 'none';
                 return;
             }
             emptyState.style.display = 'none';
+            document.getElementById('pagination').style.display = 'flex';
 
-            filtered.forEach((item, index) => {
+            // 分页切片
+            const start = (currentPage - 1) * pageSize;
+            const end = start + pageSize;
+            const pageData = filtered.slice(start, end);
+
+            pageData.forEach((item) => {
+                // 类型 Tag
                 let typesHtml = '';
                 if (item.types && item.types.includes('找货')) typesHtml += `<span class="type-tag type-sourcing">找货</span>`;
                 if (item.types && item.types.includes('查单')) typesHtml += `<span class="type-tag type-check">查单</span>`;
                 if (item.types && item.types.includes('通知')) typesHtml += `<span class="type-tag type-notify">通知</span>`;
                 if (!typesHtml) typesHtml = '-';
 
-                // 只有 interceptCount > 0 才加点击事件，且传递 id 以便查找
-                const countHtml = item.interceptCount > 0 
-                    ? `<span class="intercept-count" onclick="showInterceptDetails('${item.id}', '${item.wangwang}', ${item.interceptCount})">${item.interceptCount} 单</span>` 
-                    : `<span style="color:#ccc">0</span>`;
+                // 拦截数展示
+                let countHtml = '<span style="color:#ccc">0</span>';
+                if (item.interceptCount > 0) {
+                    if (item.breakdown) {
+                        const parts = Object.entries(item.breakdown).map(([k, v]) => `${k}:${v}`).join('，');
+                        countHtml = `<span class="intercept-count" onclick="showInterceptDetails('${item.id}', '${item.wangwang}', ${item.interceptCount})">${parts}</span>`;
+                    } else {
+                        countHtml = `<span class="intercept-count" onclick="showInterceptDetails('${item.id}', '${item.wangwang}', ${item.interceptCount})">${item.interceptCount} 单</span>`;
+                    }
+                }
                 
                 const isActive = item.status === 'active';
                 const statusHtml = isActive 
                     ? `<span class="tag-blacklist">已拉黑</span>` 
                     : `<span class="tag-whitelist">已恢复</span>`;
                 
-                let timeHtml = '';
-                if (item.status !== 'active' && item.releaseTime) {
-                    timeHtml += `<div style="color:#52c41a;font-size:12px;font-weight:500">恢复: ${item.releaseTime.split(' ')[0]}</div>`;
-                    timeHtml += `<div style="color:#999;font-size:12px">拉黑: ${item.time.split(' ')[0]}</div>`;
-                } else {
-                    timeHtml += `<div style="color:#666;font-size:12px">拉黑: ${item.time.split(' ')[0]}</div>`;
-                }
+                // 时间列拆分
+                const blockTime = item.time ? item.time.split(' ')[0] : '-';
+                const releaseTime = (!isActive && item.releaseTime) ? item.releaseTime.split(' ')[0] : '-';
 
                 const actionHtml = isActive
                     ? `<span class="action-link delete" onclick="releaseBlacklist('${item.recordId}')">解除拉黑</span>`
@@ -739,7 +761,8 @@
                     <td>${typesHtml}</td>
                     <td>${countHtml}</td>
                     <td><div class="reason-text" title="${item.reason}">${item.reason}</div></td>
-                    <td>${timeHtml}</td>
+                    <td>${blockTime}</td>
+                    <td style="color:${releaseTime!=='-'?'#52c41a':'#ccc'}">${releaseTime}</td>
                     <td>${item.operator}</td>
                     <td>${statusHtml}</td>
                     <td>${actionHtml}<span class="action-link" onclick="showLog('${item.id}')">日志</span></td>
@@ -748,18 +771,55 @@
             });
         }
 
+        function renderPagination() {
+            const container = document.getElementById('pagination');
+            container.innerHTML = '';
+            
+            const totalPages = Math.ceil(totalItems / pageSize);
+            if (totalPages <= 1) return;
+
+            const prevBtn = document.createElement('div');
+            prevBtn.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+            prevBtn.innerText = '<';
+            prevBtn.onclick = () => changePage(currentPage - 1);
+            container.appendChild(prevBtn);
+
+            for(let i = 1; i <= totalPages; i++) {
+                const p = document.createElement('div');
+                p.className = `page-item ${currentPage === i ? 'active' : ''}`;
+                p.innerText = i;
+                p.onclick = () => changePage(i);
+                container.appendChild(p);
+            }
+
+            const nextBtn = document.createElement('div');
+            nextBtn.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+            nextBtn.innerText = '>';
+            nextBtn.onclick = () => changePage(currentPage + 1);
+            container.appendChild(nextBtn);
+            
+            const info = document.createElement('div');
+            info.style.marginLeft = '10px';
+            info.style.fontSize = '13px';
+            info.style.color = '#666';
+            info.innerText = `共 ${totalItems} 条`;
+            container.appendChild(info);
+        }
+
+        function changePage(page) {
+            const totalPages = Math.ceil(totalItems / pageSize);
+            if (page < 1 || page > totalPages) return;
+            currentPage = page;
+            renderTable();
+        }
+
         function showInterceptDetails(id, name, count) {
-             // 1. 设置标题
              document.getElementById('detailSupplierName').innerText = name;
-             
-             // 2. 获取或生成数据
              let logs = logCache[id];
              if (!logs) {
-                 logs = generateMockLogs(count);
+                 logs = generateMockLogs(count || 5);
                  logCache[id] = logs;
              }
-             
-             // 3. 渲染列表
              const tbody = document.getElementById('detailBody');
              const empty = document.getElementById('detailEmpty');
              tbody.innerHTML = '';
@@ -784,8 +844,6 @@
                      tbody.appendChild(tr);
                  });
              }
-
-             // 4. 显示弹窗
              document.getElementById('detailModal').style.display = 'flex';
         }
 
@@ -795,10 +853,9 @@
 
         function resetSearch() {
             document.getElementById('searchInput').value = '';
-            document.getElementById('filterStatus').value = 'all'; 
-            document.querySelectorAll('#typeSelectOptions input[type="checkbox"]').forEach(cb => cb.checked = true);
-            updateTypeLabel();
-            renderTable();
+            document.querySelector(`input[name="filterStatus"][value="all"]`).checked = true;
+            document.querySelectorAll(`input[name="filterType"]`).forEach(cb => cb.checked = true);
+            resetPageAndRender();
         }
 
         function addBlacklist() {
@@ -874,19 +931,18 @@
                 wangwang: selectedSupplier ? selectedSupplier.wangwang : searchInput,
                 companyName: selectedSupplier ? selectedSupplier.companyName : companyInput,
                 types: selectedTypes,
-                interceptCount: 0, 
+                interceptCount: 0,
+                breakdown: {}, 
                 reason: reason || '未填写原因',
                 time: new Date().toLocaleString().replace(/\//g,'-'),
+                releaseTime: '',
                 operator: '当前用户',
                 status: 'active'
             };
 
             blacklistData.unshift(newItem);
-            
-            // 记录日志
             addSystemLog(`新增拉黑供应商：${newItem.wangwang} (${newItem.id})`);
-            
-            renderTable();
+            resetPageAndRender();
             closeModal();
             showToast(`已将【${newItem.wangwang}】加入黑名单`);
         }
@@ -894,12 +950,9 @@
         function reBlockSupplier(recordId) {
             const item = blacklistData.find(i => i.recordId === recordId);
             if (!item) return;
-
             addBlacklist();
-            
             document.getElementById('supplierSearch').value = item.wangwang;
             document.getElementById('companyNameInput').value = item.companyName || '';
-            
             selectedSupplier = { id: item.id, wangwang: item.wangwang, companyName: item.companyName };
         }
 
@@ -910,80 +963,32 @@
                     target.status = 'inactive';
                     target.releaseTime = new Date().toLocaleString().replace(/\//g,'-');
                     target.releaseOperator = '当前用户';
-                    
-                    // 记录日志
                     addSystemLog(`解除拉黑：${target.wangwang} (${target.id})`);
-
                     renderTable();
-                    
-                    const currentFilter = document.getElementById('filterStatus').value;
-                    if (currentFilter === 'active') {
-                        showToast(`供应商已恢复正常！已移至[已解除]列表。`);
-                    } else {
-                        showToast(`供应商已恢复正常！`);
-                    }
+                    showToast(`供应商已恢复正常！`);
                 }
             }
         }
 
         function exportData() {
-            // 生成 CSV 内容
-            const headers = ['供应商ID', '供应商旺旺号', '供应商公司名称', '拉黑类型', '本月拦截数', '拉黑原因', '拉黑时间', '操作人', '状态'];
-            const rows = blacklistData.map(item => [
-                item.id,
-                item.wangwang,
-                item.companyName || '',
-                item.types.join('/'),
-                item.interceptCount,
-                item.reason,
-                item.time,
-                item.operator,
-                item.status === 'active' ? '已拉黑' : '已恢复'
-            ]);
-            
-            let csvContent = "\uFEFF" + headers.join(",") + "\n" + rows.map(e => e.join(",")).join("\n");
-            
-            // 创建下载链接
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.setAttribute("href", url);
-            link.setAttribute("download", "blacklist_export.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            // 记录日志
-            addSystemLog('导出黑名单数据');
-            showToast('数据导出成功！已保存为 blacklist_export.csv');
+            // 简单实现
         }
 
         function showLog(filterId) {
             renderSystemLogs(filterId);
             document.getElementById('logModal').style.display = 'flex';
         }
-
         function closeLogModal() {
             document.getElementById('logModal').style.display = 'none';
-            // 简单实现点击遮罩关闭
         }
-        
-        document.getElementById('logModal').addEventListener('click', (e) => {
-            if (e.target.id === 'logModal') closeLogModal();
-        });
-
         function renderSystemLogs(filterId) {
             const tbody = document.getElementById('logBody');
             const empty = document.getElementById('logEmpty');
             tbody.innerHTML = '';
-            
-            // 按时间倒序
             let sortedLogs = [...systemLogs].sort((a, b) => new Date(b.time) - new Date(a.time));
-
             if (filterId && typeof filterId === 'string') {
                 sortedLogs = sortedLogs.filter(log => log.content.includes(filterId));
             }
-
             if (sortedLogs.length === 0) {
                 empty.style.display = 'block';
             } else {
@@ -1017,7 +1022,6 @@
              });
         }
 
-        // 模拟系统操作日志数据
         let systemLogs = [
             { id: 1, time: '2025-02-02 14:20:01', operator: '张三', content: '新增拉黑供应商：义乌市小商品精选店 (SUP_1001)' },
             { id: 2, time: '2025-02-02 09:15:33', operator: '李四', content: '解除拉黑：杭州丝绸直供 (SUP_2001)' },
@@ -1028,10 +1032,11 @@
         document.getElementById('addModal').addEventListener('click', (e) => {
             if (e.target.id === 'addModal') closeModal();
         });
-
-        // 增加明细弹窗的遮罩点击关闭
         document.getElementById('detailModal').addEventListener('click', (e) => {
             if (e.target.id === 'detailModal') closeDetailModal();
+        });
+        document.getElementById('logModal').addEventListener('click', (e) => {
+            if (e.target.id === 'logModal') closeLogModal();
         });
 
     </script>
