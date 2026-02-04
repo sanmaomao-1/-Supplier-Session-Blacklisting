@@ -2,12 +2,1092 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>供应商拉黑-列表页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>供应商异常管理 + 拉黑弹窗</title>
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Microsoft Yahei", sans-serif;
+        }
+
+        body {
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        /* 筛选栏样式 */
+        .filter-bar {
+            background: #fff;
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-size: 14px;
+            color: #333;
+            white-space: nowrap;
+        }
+
+        .filter-input {
+            padding: 8px 12px;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+            width: 200px;
+        }
+
+        .filter-input:focus {
+            border-color: #1890ff;
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: #1890ff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .filter-btn:hover {
+            background: #40a9ff;
+        }
+
+        .reset-btn {
+            padding: 8px 16px;
+            background: #fff;
+            color: #333;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .reset-btn:hover {
+            border-color: #1890ff;
+            color: #1890ff;
+        }
+
+        /* 表格样式 */
+        .table-container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .main-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .main-table th, .main-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .main-table th {
+            background-color: #fafafa;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .main-table td {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* 嵌套表格样式 */
+        .nested-td {
+            padding: 0 !important;
+            background-color: #f9f9f9;
+        }
+
+        .nested-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .nested-table th {
+            padding: 10px 16px;
+            font-size: 12px;
+            color: #666;
+            background-color: #f5f5f5;
+        }
+
+        .nested-table td {
+            padding: 10px 16px;
+            font-size: 12px;
+            color: #666;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        /* 标签样式 */
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #fff;
+        }
+
+        .tag-info {
+            background-color: #1890ff;
+        }
+
+        .tag-danger {
+            background-color: #f5222d;
+        }
+
+        .tag-warning {
+            background-color: #faad14;
+        }
+
+        .tag-primary {
+            background-color: #722ed1;
+        }
+
+        .tag-cha {
+            background-color: #13c2c2;
+        }
+
+        .tag-zhao {
+            background-color: #fa8c16;
+        }
+
+        .tag-tong {
+            background-color: #eb2f96;
+        }
+
+        .tag-abnormal {
+            background-color: #f5222d;
+        }
+
+        .tag-normal {
+            background-color: #52c41a;
+        }
+
+        .tag-blacklisted {
+            background-color: #000;
+        }
+
+        /* 按钮样式 */
+        .btn {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .mini-btn {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        .btn-default {
+            background: #fff;
+            border-color: #d9d9d9;
+            color: #333;
+        }
+
+        .btn-default:hover {
+            border-color: #1890ff;
+            color: #1890ff;
+        }
+
+        .btn-danger {
+            background: #f5222d;
+            color: #fff;
+            border-color: #f5222d;
+        }
+
+        .btn-danger:hover {
+            background: #ff4d4f;
+            border-color: #ff4d4f;
+        }
+
+        .btn-disabled {
+            background: #f5f5f5;
+            color: #999;
+            border-color: #d9d9d9;
+            cursor: not-allowed;
+        }
+
+        .btn-disabled:hover {
+            background: #f5f5f5;
+            color: #999;
+            border-color: #d9d9d9;
+        }
+
+        /* 展开/收起按钮 */
+        .toggle-btn {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            cursor: pointer;
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* 空状态 */
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .empty-state .icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: #d9d9d9;
+        }
+
+        /* 遮罩层 */
+        .modal-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        /* 弹窗容器 */
+        .modal-container {
+            width: 500px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* 弹窗头部 */
+        .modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e8e8e8;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .modal-close {
+            width: 24px;
+            height: 24px;
+            line-height: 24px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 18px;
+            color: #999;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: #f5222d;
+        }
+
+        /* 弹窗内容区 */
+        .modal-body {
+            padding: 20px;
+        }
+
+        /* 表单项样式 */
+        .form-item {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .form-label.required::after {
+            content: '*';
+            color: #f5222d;
+            margin-left: 4px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: #1890ff;
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+
+        .form-input.textarea {
+            min-height: 80px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        /* 复选框组 */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        .checkbox {
+            width: 16px;
+            height: 16px;
+            border: 1px solid #d9d9d9;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .checkbox.checked {
+            background: #1890ff;
+            border-color: #1890ff;
+            color: #fff;
+        }
+
+        /* 提示文本 */
+        .tip-text {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .warn-text {
+            font-size: 12px;
+            color: #f5222d;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .warn-text i {
+            font-style: normal;
+        }
+
+        /* 弹窗底部按钮区 */
+        .modal-footer {
+            padding: 16px 20px;
+            border-top: 1px solid #e8e8e8;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .btn-cancel {
+            background: #fff;
+            border-color: #d9d9d9;
+            color: #333;
+        }
+
+        .btn-cancel:hover {
+            border-color: #1890ff;
+            color: #1890ff;
+        }
+
+        .btn-confirm {
+            background: #1890ff;
+            color: #fff;
+        }
+
+        .btn-confirm:hover {
+            background: #40a9ff;
+        }
+
+        /* 错误提示 */
+        .error-tip {
+            font-size: 12px;
+            color: #f5222d;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .error-tip.show {
+            display: block;
+        }
+
+        /* 成功提示 */
+        .success-toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 12px 24px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 10000;
+            display: none;
+        }
+    </style>
+    <!-- 引入字体图标（可选，用于沟通按钮） -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <h1>供应商会话拉黑 - 黑名单列表页</h1>
-    <p>这是多级页面：list/ 目录下的index.html</p>
-    <!-- 后续加跳转链接用 -->
-    <a href="../">← 返回主页</a>
+    <!-- 筛选栏 -->
+    <div class="filter-bar">
+        <div class="filter-item">
+            <label class="filter-label">供应商旺旺号：</label>
+            <input type="text" class="filter-input" id="filterWangwang" placeholder="请输入旺旺号关键词">
+        </div>
+        <div class="filter-item">
+            <label class="filter-label">最近异常开始时间：</label>
+            <input type="datetime-local" class="filter-input" id="filterStartTime" style="width: 220px;">
+        </div>
+        <div class="filter-item">
+            <label class="filter-label">最近异常结束时间：</label>
+            <input type="datetime-local" class="filter-input" id="filterEndTime" style="width: 220px;">
+        </div>
+        <div class="filter-item">
+            <button class="filter-btn" onclick="filterSuppliers()">查询</button>
+            <button class="reset-btn" onclick="resetFilter()">重置</button>
+        </div>
+    </div>
+
+    <!-- 供应商异常数据表格 -->
+    <div class="table-container">
+        <table class="main-table">
+            <thead>
+                <tr>
+                    <th style="width: 40px;">▼</th>
+                    <th>供应商ID</th>
+                    <th>供应商旺旺号</th>
+                    <th>公司名称</th>
+                    <th>总问询次数</th>
+                    <th>异常任务数</th>
+                    <th>累计异常次数</th>
+                    <th>最新异常时间</th>
+                    <th>供应商操作</th>
+                </tr>
+            </thead>
+            <tbody id="supplierTableBody">
+                <!-- 供应商1：多任务异常（查单+找货） -->
+                <tr class="supplier-tr" data-sup-id="SUP_10086" data-wangwang="tb_seller_001" data-abnormal-time="2026-02-02 14:35:22">
+                    <td><span class="toggle-btn" onclick="toggleNested(this)">+</span></td>
+                    <td>SUP_10086</td>
+                    <td>tb_seller_001</td>
+                    <td>XX商贸有限公司</td>
+                    <td><span class="tag tag-info">28次</span></td>
+                    <td><span class="tag tag-danger">2个</span></td>
+                    <td><span class="tag tag-warning">5次</span></td>
+                    <td>2026-02-02 14:35:22</td>
+                    <td class="operate-group" id="operate-SUP_10086">
+                        <button class="btn btn-danger mini-btn" onclick="showBlacklistModal('SUP_10086', 'tb_seller_001', 'XX商贸有限公司', '28次')">加入黑名单</button>
+                    </td>
+                </tr>
+                <!-- 供应商1 嵌套子表格 -->
+                <tr class="nested-tr" data-sup-id="SUP_10086" style="display: none;">
+                    <td colspan="9" class="nested-td">
+                        <table class="nested-table">
+                            <thead>
+                                <tr>
+                                    <th>任务类型</th>
+                                    <th>任务时间</th>
+                                    <th>任务问询次数</th>
+                                    <th>AI考核状态</th>
+                                    <th>异常问题类型</th>
+                                    <th>考核规则</th>
+                                    <th>本次触发时间</th>
+                                    <th>该任务累计异常</th>
+                                    <th>任务操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="task-row-cha" data-sup-id="SUP_10086" data-task="cha" data-taskname="查单">
+                                    <td><span class="tag tag-cha">查单任务</span></td>
+                                    <td>2026-02-02 14:00:00</td>
+                                    <td><span class="tag tag-info">15次</span></td>
+                                    <td><span class="tag tag-abnormal">异常</span></td>
+                                    <td><span class="tag tag-danger">无货</span></td>
+                                    <td>需2小时内回复物流/货品问题，无货需明确告知补货时间，次品需提供补发/退款方案</td>
+                                    <td>2026-02-02 14:35:22</td>
+                                    <td><span class="tag tag-warning">3次</span></td>
+                                    <td class="operate-group">
+                                        <button class="btn btn-default mini-btn" onclick="showChatModal('SUP_10086', 'cha')"><i class="fas fa-comment"></i> 看沟通</button>
+                                    </td>
+                                </tr>
+                                <tr class="task-row-zhao" data-sup-id="SUP_10086" data-task="zhao" data-taskname="找货">
+                                    <td><span class="tag tag-zhao">找货任务</span></td>
+                                    <td>2026-02-02 14:30:00</td>
+                                    <td><span class="tag tag-info">10次</span></td>
+                                    <td><span class="tag tag-abnormal">异常</span></td>
+                                    <td><span class="tag tag-danger">超期未回</span></td>
+                                    <td>30分钟内需回复现货状态，无货/无此款需直接说明，禁止模糊回复</td>
+                                    <td>2026-02-02 15:06:30</td>
+                                    <td><span class="tag tag-warning">2次</span></td>
+                                    <td class="operate-group">
+                                        <button class="btn btn-default mini-btn" onclick="showChatModal('SUP_10086', 'zhao')"><i class="fas fa-comment"></i> 看沟通</button>
+                                    </td>
+                                </tr>
+                                <tr class="task-row-tong" data-sup-id="SUP_10086" data-task="tong" data-taskname="通知">
+                                    <td><span class="tag tag-tong">通知任务</span></td>
+                                    <td>2026-02-02 13:45:00</td>
+                                    <td><span class="tag tag-info">3次</span></td>
+                                    <td><span class="tag tag-normal">正常</span></td>
+                                    <td>-</td>
+                                    <td>改价任务需在1小时内完成，且改价结果需匹配预期价格，禁止无故偏离</td>
+                                    <td>-</td>
+                                    <td><span class="tag tag-primary">0次</span></td>
+                                    <td class="operate-group">
+                                        <button class="btn btn-default mini-btn" onclick="showChatModal('SUP_10086', 'tong')"><i class="fas fa-comment"></i> 看沟通</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- 供应商2：单任务异常（查单-次品） -->
+                <tr class="supplier-tr" data-sup-id="SUP_10087" data-wangwang="yw_supplier_02" data-abnormal-time="2026-02-02 10:12:36">
+                    <td><span class="toggle-btn" onclick="toggleNested(this)">+</span></td>
+                    <td>SUP_10087</td>
+                    <td>yw_supplier_02</td>
+                    <td>义乌XX饰品厂</td>
+                    <td><span class="tag tag-info">12次</span></td>
+                    <td><span class="tag tag-danger">1个</span></td>
+                    <td><span class="tag tag-primary">2次</span></td>
+                    <td>2026-02-02 10:12:36</td>
+                    <td class="operate-group" id="operate-SUP_10087">
+                        <button class="btn btn-danger mini-btn" onclick="showBlacklistModal('SUP_10087', 'yw_supplier_02', '义乌XX饰品厂', '12次')">加入黑名单</button>
+                    </td>
+                </tr>
+                <tr class="nested-tr" data-sup-id="SUP_10087" style="display: none;">
+                    <td colspan="9" class="nested-td">
+                        <table class="nested-table">
+                            <thead><tr><th>任务类型</th><th>任务时间</th><th>任务问询次数</th><th>AI考核状态</th><th>异常问题类型</th><th>考核规则</th><th>本次触发时间</th><th>该任务累计异常</th><th>任务操作</th></tr></thead>
+                            <tbody>
+                                <tr class="task-row-cha" data-sup-id="SUP_10087" data-task="cha" data-taskname="查单">
+                                    <td><span class="tag tag-cha">查单任务</span></td>
+                                    <td>2026-02-02 09:45:00</td>
+                                    <td><span class="tag tag-info">9次</span></td>
+                                    <td><span class="tag tag-abnormal">异常</span></td>
+                                    <td><span class="tag tag-danger">次品</span></td>
+                                    <td>需2小时内回复物流/货品问题，无货需明确告知补货时间，次品需提供补发/退款方案</td>
+                                    <td>2026-02-02 10:12:36</td>
+                                    <td><span class="tag tag-primary">2次</span></td>
+                                    <td class="operate-group"><button class="btn btn-default mini-btn" onclick="showChatModal('SUP_10087', 'cha')"><i class="fas fa-comment"></i> 看沟通</button></td>
+                                </tr>
+                                <tr class="task-row-zhao" data-sup-id="SUP_10087" data-task="zhao" data-taskname="找货">
+                                    <td><span class="tag tag-zhao">找货任务</span></td>
+                                    <td>2026-02-01 16:20:00</td>
+                                    <td><span class="tag tag-info">2次</span></td>
+                                    <td><span class="tag tag-normal">正常</span></td>
+                                    <td>-</td>
+                                    <td>30分钟内需回复现货状态，无货/无此款需直接说明，禁止模糊回复</td>
+                                    <td>-</td>
+                                    <td><span class="tag tag-primary">0次</span></td>
+                                    <td class="operate-group"><button class="btn btn-default mini-btn" onclick="showChatModal('SUP_10087', 'zhao')"><i class="fas fa-comment"></i> 看沟通</button></td>
+                                </tr>
+                                <tr class="task-row-tong" data-sup-id="SUP_10087" data-task="tong" data-taskname="通知">
+                                    <td><span class="tag tag-tong">通知任务</span></td>
+                                    <td>2026-02-01 14:10:00</td>
+                                    <td><span class="tag tag-info">1次</span></td>
+                                    <td><span class="tag tag-normal">正常</span></td>
+                                    <td>-</td>
+                                    <td>改价任务需在1小时内完成，且改价结果需匹配预期价格，禁止无故偏离</td>
+                                    <td>-</td>
+                                    <td><span class="tag tag-primary">0次</span></td>
+                                    <td class="operate-group"><button class="btn btn-default mini-btn" onclick="showChatModal('SUP_10087', 'tong')"><i class="fas fa-comment"></i> 看沟通</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- 供应商3：单任务异常（找货-没做这个款） -->
+                <tr class="supplier-tr" data-sup-id="SUP_10088" data-wangwang="sz_3c_seller" data-abnormal-time="2026-02-02 09:05:18">
+                    <td><span class="toggle-btn" onclick="toggleNested(this)">+</span></td>
+                    <td>SUP_10088</td>
+                    <td>sz_3c_seller</td>
+                    <td>深圳XX数码科技</td>
+                    <td><span class="tag tag-info">22次</span></td>
+                    <td><span class="tag tag-danger">1个</span></td>
+                    <td><span class="tag tag-warning">4次</span></td>
+                    <td>2026-02-02 09:05:18</td>
+                    <td class="operate-group" id="operate-SUP_10088">
+                        <button class="btn btn-danger mini-btn" onclick="showBlacklistModal('SUP_10088', 'sz_3c_seller', '深圳XX数码科技', '22次')">加入黑名单</button>
+                    </td>
+                </tr>
+                <tr class="nested-tr" data-sup-id="SUP_10088" style="display: none;">
+                    <td colspan="9" class="nested-td">
+                        <table class="nested-table">
+                            <thead><tr><th>任务类型</th><th>任务时间</th><th>任务问询次数</th><th>AI考核状态</th><th>异常问题类型</th><th>考核规则</th><th>本次触发时间</th><th>该任务累计异常</th><th>任务操作</th></tr></thead>
+                            <tbody>
+                                <tr class="task-row-cha" data-sup-id="SUP_10088" data-task="cha" data-taskname="查单">
+                                    <td><span class="tag tag-cha">查单任务</span></td>
+                                    <td>2026-02-01 11:30:00</td>
+                                    <td><span class="tag tag-info">6次</span></td>
+                                    <td><span class="tag tag-normal">正常</span></td>
+                                    <td>-</td>
+                                    <td>需2小时内回复物流/货品问题，无货需明确告知补货时间，次品需提供补发/退款方案</td>
+                                    <td>-</td>
+                                    <td><span class="tag tag-primary">0次</span></td>
+                                    <td class="operate-group"><button class="btn btn-default mini-btn" onclick="showChatModal('SUP_10088', 'cha')"><i class="fas fa-comment"></i> 看沟通</button></td>
+                                </tr>
+                                <tr class="task-row-zhao" data-sup-id="SUP_10088" data-task="zhao" data-taskname="找货">
+                                    <td><span class="tag tag-zhao">找货任务</span></td>
+                                    <td>2026-02-02 08:40:00</td>
+                                    <td><span class="tag tag-info">14次</span></td>
+                                    <td><span class="tag tag-abnormal">异常</span></td>
+                                    <td><span class="tag tag-danger">没做这个款</span></td>
+                                    <td>30分钟内需回复现货状态，无货/无此款需直接说明，禁止模糊回复</td>
+                                    <td>2026-02-02 09:05:18</td>
+                                    <td><span class="tag tag-warning">4次</span></td>
+                                    <td class="operate-group"><button class="btn btn-default mini-btn" onclick="showChatModal('SUP_10088', 'zhao')"><i class="fas fa-comment"></i> 看沟通</button></td>
+                                </tr>
+                                <tr class="task-row-tong" data-sup-id="SUP_10088" data-task="tong" data-taskname="通知">
+                                    <td><span class="tag tag-tong">通知任务</span></td>
+                                    <td>2026-02-01 15:25:00</td>
+                                    <td><span class="tag tag-info">2次</span></td>
+                                    <td><span class="tag tag-normal">正常</span></td>
+                                    <td>-</td>
+                                    <td>改价任务需在1小时内完成，且改价结果需匹配预期价格，禁止无故偏离</td>
+                                    <td>-</td>
+                                    <td><span class="tag tag-primary">0次</span></td>
+                                    <td class="operate-group"><button class="btn btn-default mini-btn" onclick="showChatModal('SUP_10088', 'tong')"><i class="fas fa-comment"></i> 看沟通</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- 供应商4：单任务异常（通知-改价未改到预期价） -->
+                <tr class="supplier-tr" data-sup-id="SUP_10089" data-wangwang="jd_warehouse_01" data-abnormal-time="2026-02-02 16:20:45">
+                    <td><span class="toggle-btn" onclick="toggleNested(this)">+</span></td>
+                    <td>SUP_10089</td>
+                    <td>jd_warehouse_01</td>
+                    <td>京东XX仓储供应链</td>
+                    <td><span class="tag tag-info">8次</span></td>
+                    <td><span class="tag tag-danger">1个</span></td>
+                    <td><span class="tag tag-primary">1次</span></td>
+                    <td>2026-02-02 16:20:45</td>
+                    <td class="operate-group" id="operate-SUP_10089">
+                        <button class="btn btn-danger mini-btn" onclick="showBlacklistModal('SUP_10089', 'jd_warehouse_01', '京东XX仓储供应链', '8次')">加入黑名单</button>
+                    </td>
+                </tr>
+                <tr class="nested-tr" data-sup-id="SUP_10089" style="display: none;">
+                    <td colspan="9" class="nested-td">
+                        <table class="nested-table">
+                            <thead><tr><th>任务类型</th><th>任务时间</th><th>任务问询次数</th><th>AI考核状态</th><th>异常问题类型</th><th>考核规则</th><th>本次触发时间</th><th>该任务累计异常</th><th>任务操作</th></tr></thead>
+                            <tbody>
+                                <tr class="task-row-cha" data-sup-id="SUP_10089" data-task="cha" data-taskname="查单">
+                                    <td><span class="tag tag-cha">查单任务</span></td>
+                                    <td>2026-02-02 10:15:00</td>
+                                    <td><span class="tag tag-info">3次</span></td>
+                                    <td><span class="tag tag-normal">正常</span></td>
+                                    <td>-</td>
+                                    <td>需2小时内回复物流/货品问题，无货需明确告知补货时间，次品需提供补发/退款方案</td>
+                                    <td>-</td>
+                                    <td><span class="tag tag-primary">0次</span></td>
+                                    <td class="operate-group"><button class="btn btn-default mini-btn" onclick="showChatModal('SUP_10089', 'cha')"><i class="fas fa-comment"></i> 看沟通</button></td>
+                                </tr>
+                                <tr class="task-row-zhao" data-sup-id="SUP_10089" data-task="zhao" data-taskname="找货">
+                                    <td><span class="tag tag-zhao">找货任务</span></td>
+                                    <td>2026-02-02 11:40:00</td>
+                                    <td><span class="tag tag-info">2次</span></td>
+                                    <td><span class="tag tag-normal">正常</span></td>
+                                    <td>-</td>
+                                    <td>30分钟内需回复现货状态，无货/无此款需直接说明，禁止模糊回复</td>
+                                    <td>-</td>
+                                    <td><span class="tag tag-primary">0次</span></td>
+                                    <td class="operate-group"><button class="btn btn-default mini-btn" onclick="showChatModal('SUP_10089', 'zhao')"><i class="fas fa-comment"></i> 看沟通</button></td>
+                                </tr>
+                                <tr class="task-row-tong" data-sup-id="SUP_10089" data-task="tong" data-taskname="通知">
+                                    <td><span class="tag tag-tong">通知任务</span></td>
+                                    <td>2026-02-02 15:30:00</td>
+                                    <td><span class="tag tag-info">3次</span></td>
+                                    <td><span class="tag tag-abnormal">异常</span></td>
+                                    <td><span class="tag tag-danger">改价未改到预期价</span></td>
+                                    <td>改价任务需在1小时内完成，且改价结果需匹配预期价格，禁止无故偏离</td>
+                                    <td>2026-02-02 16:20:45</td>
+                                    <td><span class="tag tag-primary">1次</span></td>
+                                    <td class="operate-group"><button class="btn btn-default mini-btn" onclick="showChatModal('SUP_10089', 'tong')"><i class="fas fa-comment"></i> 看沟通</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- 空状态 -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="icon"><i class="fas fa-inbox"></i></div>
+            <div>暂无供应商AI沟通质量异常数据</div>
+        </div>
+    </div>
+
+    <!-- 拉黑供应商弹窗 -->
+    <div class="modal-mask" id="blackSupplierModal" style="display: none;">
+        <div class="modal-container">
+            <!-- 弹窗头部 -->
+            <div class="modal-header">
+                <span>新增拉黑供应商</span>
+                <span class="modal-close" onclick="closeModal()">&times;</span>
+            </div>
+
+            <!-- 弹窗内容 -->
+            <div class="modal-body">
+                <form id="blackSupplierForm">
+                    <!-- 供应商ID（隐藏） -->
+                    <input type="hidden" id="supplierId">
+                    <!-- 供应商旺旺号 -->
+                    <div class="form-item">
+                        <label class="form-label required">供应商旺旺号</label>
+                        <input type="text" class="form-input" id="wangwangNo" placeholder="请输入供应商旺旺号">
+                        <div class="error-tip" id="wangwangNoError">请填写供应商旺旺号</div>
+                    </div>
+
+                    <!-- 供应商公司名称 -->
+                    <div class="form-item">
+                        <label class="form-label">供应商公司名称</label>
+                        <input type="text" class="form-input" id="companyName" placeholder="请输入供应商公司名称">
+                    </div>
+
+                    <!-- 拉黑类型 -->
+                    <div class="form-item">
+                        <label class="form-label required">拉黑类型</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item" onclick="toggleCheckbox('findGoods')">
+                                <div class="checkbox checked" id="findGoodsCheckbox">✓</div>
+                                <span>找货</span>
+                            </div>
+                            <div class="checkbox-item" onclick="toggleCheckbox('checkOrder')">
+                                <div class="checkbox checked" id="checkOrderCheckbox">✓</div>
+                                <span>查单</span>
+                            </div>
+                            <div class="checkbox-item" onclick="toggleCheckbox('notify')">
+                                <div class="checkbox checked" id="notifyCheckbox">✓</div>
+                                <span>通知</span>
+                            </div>
+                        </div>
+                        <div class="tip-text">注：勾选相应类型，系统将屏蔽对应场景的任务。</div>
+                        <div class="error-tip" id="blackTypeError">请至少选择一种拉黑类型</div>
+                    </div>
+
+                    <!-- 拉黑原因 -->
+                    <div class="form-item">
+                        <label class="form-label required">拉黑原因</label>
+                        <textarea class="form-input textarea" id="blackReason" placeholder="例如：发货极慢，经常缺货，态度恶劣等..."></textarea>
+                        <div class="error-tip" id="blackReasonError">请填写拉黑原因</div>
+                        <div class="warn-text">
+                            <i>⚠</i>
+                            拉黑后，系统将不再对此供应商生成任何自动问询任务！
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 弹窗底部 -->
+            <div class="modal-footer">
+                <button class="btn btn-cancel" onclick="closeModal()">取消</button>
+                <button class="btn btn-confirm" onclick="submitBlacklist()">确认拉黑</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 成功提示 -->
+    <div class="success-toast" id="successToast">操作成功！</div>
+
+    <script>
+        // 存储当前选中的供应商ID
+        let currentSupId = '';
+        // 存储原始表格数据
+        let originalSupplierData = [];
+
+        // 页面加载完成后初始化原始数据
+        window.onload = function() {
+            // 保存原始行数据
+            const rows = document.querySelectorAll('.supplier-tr');
+            rows.forEach(row => {
+                originalSupplierData.push({
+                    element: row,
+                    wangwang: row.dataset.wangwang,
+                    abnormalTime: row.dataset.abnormalTime
+                });
+            });
+        };
+
+        // 展开/收起嵌套表格
+        function toggleNested(el) {
+            const supId = el.closest('.supplier-tr').dataset.supId;
+            const nestedTr = document.querySelector(`.nested-tr[data-sup-id="${supId}"]`);
+            if (nestedTr.style.display === 'none') {
+                nestedTr.style.display = 'table-row';
+                el.textContent = '-';
+            } else {
+                nestedTr.style.display = 'none';
+                el.textContent = '+';
+            }
+        }
+
+        // 筛选供应商
+        function filterSuppliers() {
+            const wangwangKeyword = document.getElementById('filterWangwang').value.trim().toLowerCase();
+            const startTime = document.getElementById('filterStartTime').value;
+            const endTime = document.getElementById('filterEndTime').value;
+            
+            // 转换时间格式（datetime-local -> 标准时间字符串）
+            const formatTime = (datetimeStr) => {
+                if (!datetimeStr) return '';
+                return datetimeStr.replace('T', ' ') + ':00';
+            };
+            
+            const start = formatTime(startTime);
+            const end = formatTime(endTime);
+            
+            let hasData = false;
+            const tableBody = document.getElementById('supplierTableBody');
+            const emptyState = document.getElementById('emptyState');
+
+            // 遍历所有供应商行进行筛选
+            originalSupplierData.forEach(item => {
+                const row = item.element;
+                let showRow = true;
+
+                // 筛选旺旺号
+                if (wangwangKeyword && !item.wangwang.toLowerCase().includes(wangwangKeyword)) {
+                    showRow = false;
+                }
+
+                // 筛选异常时间
+                if (start && end) {
+                    const rowTime = new Date(item.abnormalTime);
+                    const startTimeObj = new Date(start);
+                    const endTimeObj = new Date(end);
+                    if (rowTime < startTimeObj || rowTime > endTimeObj) {
+                        showRow = false;
+                    }
+                } else if (start) {
+                    const rowTime = new Date(item.abnormalTime);
+                    const startTimeObj = new Date(start);
+                    if (rowTime < startTimeObj) {
+                        showRow = false;
+                    }
+                } else if (end) {
+                    const rowTime = new Date(item.abnormalTime);
+                    const endTimeObj = new Date(end);
+                    if (rowTime > endTimeObj) {
+                        showRow = false;
+                    }
+                }
+
+                // 显示/隐藏行
+                row.style.display = showRow ? 'table-row' : 'none';
+                // 同时处理嵌套行
+                const nestedRow = document.querySelector(`.nested-tr[data-sup-id="${row.dataset.supId}"]`);
+                if (nestedRow) {
+                    nestedRow.style.display = showRow ? nestedRow.style.display : 'none';
+                }
+
+                if (showRow) hasData = true;
+            });
+
+            // 显示/隐藏空状态
+            emptyState.style.display = hasData ? 'none' : 'block';
+        }
+
+        // 重置筛选条件
+        function resetFilter() {
+            document.getElementById('filterWangwang').value = '';
+            document.getElementById('filterStartTime').value = '';
+            document.getElementById('filterEndTime').value = '';
+            
+            // 显示所有行
+            originalSupplierData.forEach(item => {
+                item.element.style.display = 'table-row';
+                const nestedRow = document.querySelector(`.nested-tr[data-sup-id="${item.element.dataset.supId}"]`);
+                if (nestedRow) {
+                    nestedRow.style.display = 'none';
+                    // 重置展开/收起按钮
+                    const toggleBtn = item.element.querySelector('.toggle-btn');
+                    if (toggleBtn) toggleBtn.textContent = '+';
+                }
+            });
+            
+            // 隐藏空状态
+            document.getElementById('emptyState').style.display = 'none';
+        }
+
+        // 显示拉黑弹窗
+        function showBlacklistModal(supId, wangwang, company, count) {
+            currentSupId = supId;
+            // 填充表单数据
+            document.getElementById('supplierId').value = supId;
+            document.getElementById('wangwangNo').value = wangwang;
+            document.getElementById('companyName').value = company;
+            
+            // 重置复选框状态
+            resetCheckboxes();
+            
+            // 显示弹窗
+            document.getElementById('blackSupplierModal').style.display = 'flex';
+        }
+
+        // 关闭弹窗
+        function closeModal() {
+            document.getElementById('blackSupplierModal').style.display = 'none';
+            // 清空错误提示
+            clearErrorTips();
+        }
+
+        // 切换复选框状态
+        function toggleCheckbox(type) {
+            const checkbox = document.getElementById(`${type}Checkbox`);
+            if (checkbox.classList.contains('checked')) {
+                checkbox.classList.remove('checked');
+                checkbox.textContent = '';
+            } else {
+                checkbox.classList.add('checked');
+                checkbox.textContent = '✓';
+            }
+        }
+
+        // 重置复选框为全选状态
+        function resetCheckboxes() {
+            const checkboxes = ['findGoodsCheckbox', 'checkOrderCheckbox', 'notifyCheckbox'];
+            checkboxes.forEach(id => {
+                const checkbox = document.getElementById(id);
+                checkbox.classList.add('checked');
+                checkbox.textContent = '✓';
+            });
+        }
+
+        // 清空错误提示
+        function clearErrorTips() {
+            const errorTips = document.querySelectorAll('.error-tip');
+            errorTips.forEach(tip => tip.classList.remove('show'));
+        }
+
+        // 表单验证
+        function validateForm() {
+            let isValid = true;
+            clearErrorTips();
+
+            // 验证旺旺号
+            const wangwangNo = document.getElementById('wangwangNo').value.trim();
+            if (!wangwangNo) {
+                document.getElementById('wangwangNoError').classList.add('show');
+                isValid = false;
+            }
+
+            // 验证拉黑类型
+            const findGoods = document.getElementById('findGoodsCheckbox').classList.contains('checked');
+            const checkOrder = document.getElementById('checkOrderCheckbox').classList.contains('checked');
+            const notify = document.getElementById('notifyCheckbox').classList.contains('checked');
+            if (!findGoods && !checkOrder && !notify) {
+                document.getElementById('blackTypeError').classList.add('show');
+                isValid = false;
+            }
+
+            // 验证拉黑原因
+            const blackReason = document.getElementById('blackReason').value.trim();
+            if (!blackReason) {
+                document.getElementById('blackReasonError').classList.add('show');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // 提交拉黑表单
+        function submitBlacklist() {
+            if (!validateForm()) return;
+
+            // 获取表单数据
+            const supId = document.getElementById('supplierId').value;
+            const wangwangNo = document.getElementById('wangwangNo').value.trim();
+            const companyName = document.getElementById('companyName').value.trim();
+            const blackReason = document.getElementById('blackReason').value.trim();
+            
+            // 获取选中的拉黑类型
+            const blackTypes = [];
+            if (document.getElementById('findGoodsCheckbox').classList.contains('checked')) blackTypes.push('找货');
+            if (document.getElementById('checkOrderCheckbox').classList.contains('checked')) blackTypes.push('查单');
+            if (document.getElementById('notifyCheckbox').classList.contains('checked')) blackTypes.push('通知');
+
+            // 模拟接口提交（实际项目中替换为真实接口请求）
+            console.log('提交拉黑供应商数据：', {
+                supId,
+                wangwangNo,
+                companyName,
+                blackTypes,
+                blackReason,
+                blackTime: new Date().toLocaleString()
+            });
+
+            // 关闭弹窗
+            closeModal();
+
+            // 更新表格中该供应商的操作按钮状态
+            const operateGroup = document.getElementById(`operate-${supId}`);
+            operateGroup.innerHTML = `<span class="tag tag-blacklisted">已拉黑</span>`;
+
+            // 显示成功提示
+            const toast = document.getElementById('successToast');
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2000);
+        }
+
+        // 模拟查看沟通记录（可根据实际需求扩展）
+        function showChatModal(supId, taskType) {
+            alert(`查看供应商【${supId}】的【${taskType === 'cha' ? '查单' : taskType === 'zhao' ? '找货' : '通知'}】任务沟通记录`);
+        }
+    </script>
 </body>
 </html>
